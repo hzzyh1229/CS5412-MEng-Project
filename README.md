@@ -4,9 +4,9 @@ _Cloud-based user interactive SDE Job Application Platform_
 
 As an ant in a beehive, you have struck liquid gold. The deeper you delve, the more dense and succulent the honey is. Crawl and rock your way through sticky platforms and enemies towards the core of the hive to get a taste of the finest and most luscious honey the universe has to offer!
 
-## Download:
+## Web Server:
 
--   Unavailable Yet :P
+  Unavailable Yet:P
 
 ## Objective:
 
