@@ -25,4 +25,4 @@ As an ant in a beehive, you have struck liquid gold. The deeper you delve, the m
 
 [Yihan Zhang](https://github.com/hzzyh1229) | Programmer \
 [Shuyan Huang](https://github.com/JoyceHuangEC) | Programmer \
-[Yuchen Qiu] (https://github.com/qiuyichen00) | Programmer 
+[Yuchen Qiu](https://github.com/qiuyichen00) | Programmer 
