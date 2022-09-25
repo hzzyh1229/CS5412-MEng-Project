@@ -10,7 +10,7 @@ As an ant in a beehive, you have struck liquid gold. The deeper you delve, the m
 
 ## Objective:
 
-xxx
+  Our project aims to build a Handshake-like software-engineer-oriented job board, where the users are able to view new job information more conveniently at one single place. What’s more, users can upload their own information such as their application status and timeline for each company. Users also have the choice to share their own information in exchange for the analyzed data from other users who are willing to share, such as the average time/percentage for getting/passing an OA/VO for a certain company.
 
 
 ## Team:
