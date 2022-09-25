@@ -25,8 +25,8 @@ As an ant in a beehive, you have struck liquid gold. The deeper you delve, the m
   Customize microservices for various logic or data extraction operations, such as getting the related job positions from the input filters and search keywords; also need some logic to control the number of instances used to ensure elasticity.\
   We want to have multiple layers of cache, including browser cache, edge cache, and possibly another cache in front of the databases so that we can optimize the data transfer speed.\
   Implement or use message queue / bus to relay the requests to micro services from the front-end webpage.
-  Use a distributed hash tables to record:\
-  1. the job position information (title, description, requirement …)\
+  Use a distributed hash tables to record:
+  1. the job position information (title, description, requirement …)
   2. User information (profile, user entered data including comments, interview experiences, time period)
 
 ## Team:
