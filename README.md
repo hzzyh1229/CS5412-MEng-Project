@@ -15,8 +15,8 @@ As an ant in a beehive, you have struck liquid gold. The deeper you delve, the m
 ## Application Details:
 
   Our project will mainly have three parts. \
-    1. A real-time crawler (which we plan to use an existing service or a self-built tool using python libraries); \
-    2. A website page that allows user interaction, which contains multiple functions and would be the main part of our project; \
+    1. A real-time crawler (which we plan to use an existing service or a self-built tool using python libraries). \
+    2. A website page that allows user interaction, which contains multiple functions and would be the main part of our project. \
     3. A database that serves as the storage tier and stores both the job and the user information.\
   The web crawler could be built using python libraries. We will search from popular job boards such as LinkedIn and Glassdoor, copying the title, description, link, etc. We plan to also use some techniques from data mining to determine whether the job supports sponsorship or not (which is an important factor for international students). The website mainly splits into several functions. First is the user login and profile page, which displays all the information users already entered. The user would be able to visualize their timeline for the job application via the user profile. Second is the information for all the companies including the posted date and detailed statistics. For the database, we plan to use a database like CosmosDB to implement, and we would also add multiple layers of cache before the final database for higher-performance retrieving.
 
