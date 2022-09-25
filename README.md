@@ -20,6 +20,14 @@ As an ant in a beehive, you have struck liquid gold. The deeper you delve, the m
     3. A database that serves as the storage tier and stores both the job and the user information.\
   The web crawler could be built using python libraries. We will search from popular job boards such as LinkedIn and Glassdoor, copying the title, description, link, etc. We plan to also use some techniques from data mining to determine whether the job supports sponsorship or not (which is an important factor for international students). The website mainly splits into several functions. First is the user login and profile page, which displays all the information users already entered. The user would be able to visualize their timeline for the job application via the user profile. Second is the information for all the companies including the posted date and detailed statistics. For the database, we plan to use a database like CosmosDB to implement, and we would also add multiple layers of cache before the final database for higher-performance retrieving.
 
+## Cloud Computing Techniques:
+
+  Customize microservices for various logic or data extraction operations, such as getting the related job positions from the input filters and search keywords; also need some logic to control the number of instances used to ensure elasticity.\
+  We want to have multiple layers of cache, including browser cache, edge cache, and possibly another cache in front of the databases so that we can optimize the data transfer speed.\
+  Implement or use message queue / bus to relay the requests to micro services from the front-end webpage.
+  Use a distributed hash tables to record:\
+  1. the job position information (title, description, requirement …)\
+  2. User information (profile, user entered data including comments, interview experiences, time period)
 
 ## Team:
 
