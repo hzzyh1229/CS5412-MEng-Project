@@ -3,11 +3,6 @@
 {% block content %}
 
 
-<a class="brand-logo" href="{{ url_for('index') }}">
-    <img class="logo" src="{{ url_for('static', filename='Logo.svg') }}">
-    <div class="brand-logo-name"><strong> ToDo </strong> </div>
-</a>
-
 <!-- Display login error message-->
 {% if message %}
 <div class="alert alert-warning" role="alert">
