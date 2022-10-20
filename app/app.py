@@ -2,7 +2,6 @@ from flask import Flask, redirect, url_for, render_template, request, session, f
 from flask_bootstrap import Bootstrap
 from config import Config
 from authentication.authentication import login_bp
-from flask_bootstrap import Bootstrap
 import os
 from home.home import home_bp
 
@@ -23,7 +22,6 @@ app.config['SECRET_KEY'] = SECRET_KEY
 #     """
 #     # return render_template('login.html')
 #     return "main page"
-
 
 if __name__ == "__main__":
     app.run(debug=True)
