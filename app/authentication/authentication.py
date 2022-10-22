@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from .forms import LoginForm, RegistrationForm
+from .forms import ForgetPassword, LoginForm, RegistrationForm
 from models import User
 from werkzeug.urls import url_parse
 
@@ -61,6 +61,14 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('authtication.login'))
     return render_template('authentication/register.html', title='Register', form=form)
+    # return "register"
+
+@login_bp.route('/forget_password', methods=['GET', 'POST'])
+def forget_password():
+    form = ForgetPassword()
+    if form.validate_on_submit():
+        return redirect(url_for('authtication.login'))
+    return render_template('authentication/forget_password.html', title='Forget', form=form)
     # return "register"
 
 @login_bp.errorhandler(404)

@@ -54,3 +54,8 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+class ForgetPassword(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Length(1, 64),
+                                       Email()])
+    submit = SubmitField('Forget Password')

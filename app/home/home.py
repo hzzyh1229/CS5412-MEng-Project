@@ -21,4 +21,4 @@ def home():
             enable_cross_partition_query=True)
 
     return render_template("home.html", jobs = data)
-
+    # return 'home'
