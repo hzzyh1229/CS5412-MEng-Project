@@ -1,0 +1,27 @@
+version: '3'
+services:
+  site1:
+   build: ./site1
+   ports:
+    - '5001:5000'
+   env_file:
+    - .env
+  site2:
+    build: ./site2
+    ports:
+      - '5002:5000'
+    env_file:
+      - .env2
+  nginx:
+    build: ./nginx
+    ports:
+      - '8080:80'
+    depends_on:
+      - site1
+      - site2
+
+  redis:
+    image: redis
+    container_name: redis-container
+    ports:
+      - "6379:6379"
