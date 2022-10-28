@@ -14,14 +14,14 @@ import json
 
 def main():
     # Opening JSON file
-    f = open('LinkedIn202210231746.json')
+    f = open('LinkedIn202210272139.json')
       
     # returns JSON object as 
     # a dictionary
     data = json.load(f)
         #container.delete_item(item, partition_key='/id')
     for job in data:
-      print(job["company"])
+      print(job.keys())
       container.upsert_item(job)
 
 if __name__ == "__main__":
