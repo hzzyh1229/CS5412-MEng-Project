@@ -1,33 +1,21 @@
-
-
 {% extends "home_base.html" %}
 {% block title%} Homepage {% endblock %}
 {% block body %}     
-<div class = "container-fluid"  id="top">
-  <form>
-    <div class = "row">
-      <div class="col g-2"></div>
-      <div class="col">
-        <input type="text" class="form-control" placeholder="Key words" aria-label="Apple">
-      </div>
-      <div class = "col">    
-        <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="customCheck1">
-          <label class="custom-control-label" for="customCheck1">filter 1</label>
-        </div>
-      </div>
-      <div class = "col">    
-        <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="customCheck1">
-          <label class="custom-control-label" for="customCheck1">filter 2
-            
-          </label>
-        </div>
-      </div>
-      <div class = "col"><button type="submit" class="btn btn-primary">Search</button></div>
-      <div class="col g-2"></div>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <input type="text" class = "form-control mb-2 mr-sm-2" placeholder="First name">
+      
     </div>
-  </form>
+        <div class="col-md-8">
+              <form class="form-inline" action="#" method="post">
+                  <label class="custom-control-label" for="customCheck1">filter 1</label>
+                  <input type="checkbox" class="custom-control-input" id="customCheck1">
+                  <button type="submit" name = "filter" value = "filter" class="btn btn-outline-primary">Search</button>
+              </form>       
+        </div>      
+  </div>
 </div>
 
 <div class = "container">
@@ -49,7 +37,7 @@
           <p class="card-text">{{job["type"]}}</p>
           <p class="card-text"><small class="text-muted">Post Time: {{job["date"]}}</small></p>
           <div class = "col g-2">
-            <button type="button" class="btn btn-primary btn-sm">Read More / Apply</button>
+            <a href = '/job{{job["job_id"]}}'>Read More / Apply</a>
           </div>
           
         </div>

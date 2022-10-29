@@ -10,19 +10,24 @@ CONTAINER_NAME = 'Positions'
 container = database.get_container_client(CONTAINER_NAME)
 import json
   
-
-
 def main():
     # Opening JSON file
-    f = open('LinkedIn202210231746.json')
+    f = open('LinkedIn202210281807.json')
       
     # returns JSON object as 
     # a dictionary
     data = json.load(f)
-        #container.delete_item(item, partition_key='/id')
-    for job in data:
-      print(job["company"])
-      container.upsert_item(job)
+    #container.delete_item(item, partition_key='/id')
+
+    print(list(container.query_items(query=f'SELECT * FROM c WHERE c.job_id = "3328007399"', enable_cross_partition_query=True)))
+    print(len(data))
+    i = 0
+    for job in data[:100]:
+        print(i)
+        i+=1
+        temp = list(container.query_items(query=f'SELECT * FROM c WHERE c.job_id = "{job["job_id"]}"', enable_cross_partition_query=True))
+        if(len(temp) == 0):
+            container.upsert_item(job)
 
 if __name__ == "__main__":
     main()
