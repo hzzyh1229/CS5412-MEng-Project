@@ -3,65 +3,63 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from .forms import ForgetPassword, LoginForm, RegistrationForm
 from models import User
 from werkzeug.urls import url_parse
+from azure.cosmos import CosmosClient
+# from .. import app
 
 login_bp = Blueprint('login_bp', __name__, template_folder='templates')
 # login_bp = Blueprint('login_bp', __name__,
 #     template_folder='templates',
 #     static_folder='static', static_url_path='assets')
+URL = "https://playground2.documents.azure.com:443/"
+KEY = "v2V0lRtUsNNYEckQfGlvrAOFGjxhxGkKDSge2CXMccGdKB2lSxXmmfMtyuUcjeWuBCaCTntdeGf0QnFB9C8xuQ=="
+client = CosmosClient(URL, credential=KEY)
+DATABASE_NAME = 'Job Board'
+database = client.get_database_client(DATABASE_NAME)
+
+CONTAINER_NAME = 'Users'
+container = database.get_container_client(CONTAINER_NAME)
 
 @login_bp.route('/login', methods=['GET', 'POST'])
 def login():
     """
     return the login page
     """
-    # if current_user.is_authenticated:
-        # return redirect(url_for('task.tasks'))
+    if current_user.is_authenticated:
+        return redirect(url_for('home.home'))
         # return "user authenticated"
     form = LoginForm()
     if form.validate_on_submit():
-        # user = User.query.filter_by(email=form.email.data.lower()).first()
-        # if user is None or not user.check_password(form.password.data):
-        #     nologin = True
+        user_info = list(container.query_items(
+            query='SELECT * FROM Users WHERE Users.email = @email', 
+                parameters=[dict(name="@email", value=form.email.data)], 
+                enable_cross_partition_query=True))
+        if user_info and len(user_info) == 1 and User.check_password(user_info[0]['password'], form.password.data):
+            user_obj = User(email=user_info[0]['email'])
+            login_user(user_obj)
+            return redirect(url_for('home.home'))
         # else:
-        #     login_user(user, remember=form.remember_me.data)
-        #     next_page = request.args.get('next')
-        #     if not next_page or url_parse(next_page).netloc != '':
-        #         next_page = url_for('task.tasks')
-        #     return redirect(next_page)
-        return "login success"
+        #     raise Error('Password is not correct.')
     return render_template('authentication/login.html', title='Sign In', form=form)
-    # if form.validate_on_submit():
-    #     login_user(user)
-    #     flask.flash('Logged in successfully.')
-    #     # user = models.User.find_by_email(form.email.data)
-    # # return render_template('login.html')
-    return "log in"
 
 @login_bp.route('/logout')
-# @login_required
+@login_required
 def logout():
     """
     return the logout page
     """
-    # logout_user()
-    # return redirect(somewhere)
+    logout_user()
     flash('Log out successfully.')
     return redirect(url_for('home.home'))
 
 @login_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('task.tasks'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data.lower(), email=form.email.data.lower())
-        user.set_password(form.password.data)
-        # db.session.add(user)
-        # db.session.commit()
+        user_obj = User(email=form.email.data, password=form.password.data, nickname=form.nickname.data)
+        user_obj.save()
         flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('authtication.login'))
+        return redirect(url_for('login_bp.login'))
     return render_template('authentication/register.html', title='Register', form=form)
-    # return "register"
 
 @login_bp.route('/forget_password', methods=['GET', 'POST'])
 def forget_password():
@@ -69,7 +67,6 @@ def forget_password():
     if form.validate_on_submit():
         return redirect(url_for('authtication.login'))
     return render_template('authentication/forget_password.html', title='Forget', form=form)
-    # return "register"
 
 @login_bp.errorhandler(404)
 def page_not_found(e):
