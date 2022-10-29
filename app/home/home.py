@@ -21,7 +21,6 @@ def home():
     #init steps
     if not session.get("page"): 
         session["page"] = 0
-        print("reset")
     if not session.get("data"):
         session["data"] = list(container.query_items(
         query='SELECT * FROM c',
@@ -29,12 +28,8 @@ def home():
 
     #change pages
     if request.method == "POST":
-        print(request.form["changePage"] == "next")
         if request.form["changePage"] == "next":
-            #print("cur_page is : ",session["page"]+1)
-            print("before", session["page"])
             session["page"] += 1
-            print("after", session["page"])
         elif request.form["changePage"] == "last" and session["page"] > 0:
             session["page"] -= 1
         #print("cur_page is : ",session["page"]+1)
@@ -46,3 +41,8 @@ def home():
     info["page"] = session["page"] + 1
     info["n_results"] = n_results
     return render_template("home.html", info = info)
+
+@home_bp.route("/job<job_id>")
+def position(job_id):
+    job_info = list(container.query_items(query=f'SELECT * FROM c WHERE c.job_id = "{job_id}"', enable_cross_partition_query=True))[0]
+    return render_template("job_description.html", job_info = job_info)
