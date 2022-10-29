@@ -7,53 +7,49 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length
 # from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 # from .. import models
 from models import User
+from azure.cosmos import CosmosClient
+
+URL = "https://playground2.documents.azure.com:443/"
+KEY = "v2V0lRtUsNNYEckQfGlvrAOFGjxhxGkKDSge2CXMccGdKB2lSxXmmfMtyuUcjeWuBCaCTntdeGf0QnFB9C8xuQ=="
+client = CosmosClient(URL, credential=KEY)
+DATABASE_NAME = 'Job Board'
+database = client.get_database_client(DATABASE_NAME)
+
+CONTAINER_NAME = 'Users'
+container = database.get_container_client(CONTAINER_NAME)
 
 class RegistrationForm(FlaskForm):
-    # email = StringField('Email', 
-    #                     validators=[Required(), Length(1, 64), Email()])
-    # password = PasswordField('Password', 
-    #                         validators=[ 
-    #                             Required(), 
-    #                             EqualTo('password2', message='Passwords must match.')])
-    # password2 = PasswordField('Confirm password', validators=[Required()])
-    # submit = SubmitField('Register')
-
-    # def validate_email(self, field):
-    #     if models.User.email_is_registered(field.data):
-    #         raise ValidationError('Email already registered.')
-    username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    nickname = PasswordField('Nickname')
     submit = SubmitField('Register')
 
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user is not None:
-            raise ValidationError('Username already in use.')
-
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user is not None:
+        user_info = list(container.query_items(
+            query='SELECT * FROM Users WHERE Users.email = @email', 
+                parameters=[dict(name="@email", value=email.data)], 
+                enable_cross_partition_query=True))
+        if (len(user_info) > 0):
             raise ValidationError('Email already registered.')
 
 
 class LoginForm(FlaskForm):
-    # email = StringField(
-    #     'Email',
-    #     validators=[
-    #         DataRequired(),
-    #         Email(message='Enter a valid email.')
-    #     ]
-    # )
-    # password = PasswordField('Password', validators=[DataRequired()])
-    # submit = SubmitField('Log In')
     email = StringField('Email', validators=[DataRequired(), Length(1, 64),
                                        Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+    def validate_email(self, email):
+        user_info = list(container.query_items(
+            query='SELECT * FROM Users WHERE Users.email = @email', 
+                parameters=[dict(name="@email", value=email.data)], 
+                enable_cross_partition_query=True))
+        if (len(user_info) == 0):
+            raise ValidationError('Email is not registered.')
+
 
 class ForgetPassword(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64),
