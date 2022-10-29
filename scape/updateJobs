@@ -1,0 +1,33 @@
+from azure.cosmos import CosmosClient
+
+URL = "https://playground2.documents.azure.com:443/"
+KEY = "v2V0lRtUsNNYEckQfGlvrAOFGjxhxGkKDSge2CXMccGdKB2lSxXmmfMtyuUcjeWuBCaCTntdeGf0QnFB9C8xuQ=="
+client = CosmosClient(URL, credential=KEY)
+DATABASE_NAME = 'Job Board'
+database = client.get_database_client(DATABASE_NAME)
+
+CONTAINER_NAME = 'Positions'
+container = database.get_container_client(CONTAINER_NAME)
+import json
+  
+def main():
+    # Opening JSON file
+    f = open('LinkedIn202210281807.json')
+      
+    # returns JSON object as 
+    # a dictionary
+    data = json.load(f)
+    #container.delete_item(item, partition_key='/id')
+
+    print(list(container.query_items(query=f'SELECT * FROM c WHERE c.job_id = "3328007399"', enable_cross_partition_query=True)))
+    print(len(data))
+    i = 0
+    for job in data[:100]:
+        print(i)
+        i+=1
+        temp = list(container.query_items(query=f'SELECT * FROM c WHERE c.job_id = "{job["job_id"]}"', enable_cross_partition_query=True))
+        if(len(temp) == 0):
+            container.upsert_item(job)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,20 @@
+{% extends "home_base.html" %}
+{% block title%} Homepage {% endblock %}
+{% block body %}     
+<div class = "container">
+    <div class = "row">
+        <div class = "col">
+
+        </div>
+        <div class = "col-8">
+            <h1>Position: {{job_info["position"]}}</h1>
+            <h1>Company: {{job_info["company"]}}</h1>
+            <p>Description: {{job_info["description"]}}</p>
+        </div>
+        <div class = "col">
+            
+        </div>
+    </div>
+
+</div>
+{% endblock %}
