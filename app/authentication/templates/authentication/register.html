@@ -1,6 +1,6 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "home_base.html" %}
+{% block title%} Homepage {% endblock %}
+{% block body %}   
 
 <div class="container h-100">
     <div class="row justify-content-md-center h-100">
@@ -11,13 +11,6 @@
                     <h4 class="has-text-centered mb-5 is-size-3">Register</h4>
                 </div>
 
-                <p>
-                    {{ form.username.label }}<br>
-                    {{ form.username(size=32) }}<br>
-                    {% for error in form.username.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
                 <p>
                     {{ form.email.label }}<br>
                     {{ form.email(size=64) }}<br>
@@ -36,6 +29,13 @@
                     {{ form.password2.label }}<br>
                     {{ form.password2(size=32) }}<br>
                     {% for error in form.password2.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.nickname.label }}<br>
+                    {{ form.nickname(size=32) }}<br>
+                    {% for error in form.nickname.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </p>
