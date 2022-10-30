@@ -5,11 +5,13 @@ from flask_session import Session
 from authentication.authentication import login_bp
 import os
 from home.home import home_bp
+from user_center.user_center import user_center_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
 app.register_blueprint(login_bp)
 app.register_blueprint(home_bp, url_prefix="/")
+app.register_blueprint(user_center_bp)
 
 # to resolve issue in flask session
 app.config["SESSION_PERMANENT"] = False
