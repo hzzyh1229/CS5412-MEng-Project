@@ -28,6 +28,7 @@ def login():
         return redirect(url_for('home.home'))
         # return "user authenticated"
     form = LoginForm()
+    error = None
     if form.validate_on_submit():
         user_info = list(container.query_items(
             query='SELECT * FROM Users WHERE Users.email = @email', 
@@ -36,10 +37,12 @@ def login():
         if user_info and len(user_info) == 1 and User.check_password(user_info[0]['password'], form.password.data):
             user_obj = User(email=user_info[0]['email'])
             login_user(user_obj)
+            flash('You have successfully logged in')
             return redirect(url_for('home.home'))
-        # else:
+        else:
+            error = 'Password is incorrect'
         #     raise Error('Password is not correct.')
-    return render_template('authentication/login.html', title='Sign In', form=form)
+    return render_template('authentication/login.html', title='Sign In', form=form, error=error)
 
 @login_bp.route('/logout')
 @login_required
