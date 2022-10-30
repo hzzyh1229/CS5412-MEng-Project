@@ -2,13 +2,6 @@
 {% block title%} Login {% endblock %}
 {% block body %}    
 
-<!-- Display login error message-->
-{% if message %}
-<div class="alert alert-warning" role="alert">
-    <span class="closebtns" onclick="this.parentElement.style.display='none';">&times;</span>Invalid username or password
-</div>
-{% endif %}
-
 <div class="container h-100">
     <div class="row justify-content-md-center h-100">
         <div class="login">
@@ -27,9 +20,9 @@
                 <p>
                     {{ form.password.label }}<br>
                     {{ form.password(size=32) }}
-                    {% for error in form.password.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
+                    {% if error %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endif %}
                 </p>
                 <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
                 <div class="loginbtn">
