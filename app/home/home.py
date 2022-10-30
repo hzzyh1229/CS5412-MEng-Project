@@ -1,8 +1,9 @@
+from azure.cosmos import CosmosClient
 from multiprocessing import JoinableQueue
 
 from requests import request
+
 from flask import Flask, redirect, url_for, render_template, Blueprint, session, request
-from azure.cosmos import CosmosClient
 
 home_bp = Blueprint("home", __name__, static_folder="static",  static_url_path='/static/home', template_folder="templates")
 
