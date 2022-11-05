@@ -3,19 +3,15 @@ from distutils.log import Log
 from flask_login import UserMixin, AnonymousUserMixin, current_user, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from azure.cosmos import CosmosClient
-# from app import login_manager
-# from flask import current_app as app
 
 URL = "https://playground2.documents.azure.com:443/"
 KEY = "v2V0lRtUsNNYEckQfGlvrAOFGjxhxGkKDSge2CXMccGdKB2lSxXmmfMtyuUcjeWuBCaCTntdeGf0QnFB9C8xuQ=="
 client = CosmosClient(URL, credential=KEY)
 DATABASE_NAME = 'Job Board'
 database = client.get_database_client(DATABASE_NAME)
-# login_manager = LoginManager(app)
 
 CONTAINER_NAME = 'Users'
 container = database.get_container_client(CONTAINER_NAME)
-
 
 
 class User(UserMixin):
@@ -45,9 +41,15 @@ class User(UserMixin):
     def is_anonymous():
         return False
 
-    def get_username(self):
+    def get_nickname(self):
+        return self.nickname
+
+    def get_id(self):
         return self.username
 
+    def get_username(self):
+        return self.username
+        
     @staticmethod
     def check_password(password_hash, password):
         return check_password_hash(password_hash, password)
@@ -60,8 +62,6 @@ class User(UserMixin):
     def get_hashed(password):
         return generate_password_hash(password)
 
-    def get_id(self):
-        return self.username
     
     # @property
     # def password(self):

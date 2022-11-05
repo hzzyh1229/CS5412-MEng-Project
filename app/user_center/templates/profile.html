@@ -2,8 +2,14 @@
 {% block right %}
 <div class="row mt-5">
   <span>Name: </span>
+  {% if nickname %} 
+    <span> {{nickname}}
+  {% endif %}
 </div>
 <div class="row mt-5">
   <span>Email: </span>
+  {% if email %} 
+    <span> {{email}}
+  {% endif %}
 </div>
 {% endblock %}
