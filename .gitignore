@@ -3,3 +3,4 @@ app/flask_session/
 app/authentication/__pycache__/
 app/home/__pycache__/
 app/user_center/__pycache__/
+scrape/.ipynb_checkpoints/
