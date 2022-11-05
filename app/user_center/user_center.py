@@ -15,6 +15,7 @@ container = database.get_container_client(CONTAINER_NAME)
 @user_center_bp.route('/user_center', methods=['GET', 'POST'])
 def user_center():
   if current_user.is_authenticated:
+    # print(current_user.get_username())
     return render_template("user_center.html")
   return redirect(url_for('login_bp.login'))
   
@@ -22,10 +23,10 @@ def user_center():
 @user_center_bp.route('/user_center/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-  username = current_user.username
-  print(username)
+  username = current_user.get_username()['email']
+  # print(username)
   nickname = current_user.get_nickname()
-  print(nickname)
+  # print(nickname)
   return render_template("profile.html", email=username, nickname=nickname)
 
 @user_center_bp.route('/user_center/applications', methods=['GET', 'POST'])
