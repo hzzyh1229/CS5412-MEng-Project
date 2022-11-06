@@ -1,6 +1,6 @@
 from azure.cosmos import CosmosClient
 from multiprocessing import JoinableQueue
-
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from requests import request
 
 from flask import Flask, redirect, url_for, render_template, Blueprint, session, request
@@ -15,7 +15,8 @@ database = client.get_database_client(DATABASE_NAME)
 
 CONTAINER_NAME = 'Positions'
 container = database.get_container_client(CONTAINER_NAME)
-
+CONTAINER_NAME2 = 'Applications'
+application_container = database.get_container_client(CONTAINER_NAME2)
 
 @home_bp.route("/", methods = ["POST", "GET"])
 def home():
@@ -29,11 +30,21 @@ def home():
 
     #change pages
     if request.method == "POST":
-        if request.form["changePage"] == "next":
-            session["page"] += 1
-        elif request.form["changePage"] == "last" and session["page"] > 0:
-            session["page"] -= 1
+        if "changePage" in request.form.keys():
+            if request.form["changePage"] == "next":
+                session["page"] += 1
+            elif request.form["changePage"] == "last" and session["page"] > 0:
+                session["page"] -= 1
         #print("cur_page is : ",session["page"]+1)
+    
+        #apply job
+        elif "apply" in request.form.keys():
+            if (request.form["apply"]):
+                job_id = request.form["apply"]
+                application_container.upsert_item({"email":current_user.get_username()['email'], 
+                    "job_id": job_id, "status": "submitted"})
+                # print(job_id)
+                # print(current_user.get_username()['email'])
 
     n_results = len(session["data"])
     data = session["data"][session["page"]*5: session["page"]*5+5]

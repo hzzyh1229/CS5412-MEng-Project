@@ -32,14 +32,14 @@ def profile():
 @user_center_bp.route('/user_center/applications', methods=['GET', 'POST'])
 @login_required
 def applications():
-  # application_info = list(container.query_items(
-  #           query='SELECT * FROM Applications WHERE Applications.email = @email', 
-  #               parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
-  #               enable_cross_partition_query=True))
   application_info = list(container.query_items(
             query='SELECT * FROM Applications WHERE Applications.email = @email', 
-                parameters=[dict(name="@email", value='qyc@email.com')], 
+                parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
                 enable_cross_partition_query=True))
+  # application_info = list(container.query_items(
+  #           query='SELECT * FROM Applications WHERE Applications.email = @email', 
+  #               parameters=[dict(name="@email", value='qyc@email.com')], 
+  #               enable_cross_partition_query=True))
   print(application_info)
   return render_template("applications.html", applications = application_info)
 
