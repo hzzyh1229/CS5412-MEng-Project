@@ -57,7 +57,7 @@
           <p class="card-text">{{job["type"]}}</p>
           <p class="card-text"><small class="text-muted">Post Time: {{job["date"]}}</small></p>
           <p class = "col g-2">
-            <a href = '/job{{job["job_id"]}}'>Read More / Apply</a>
+            <a href = '/job{{job["job_id"]}}'>Read More / Add to Applied </a>
           </p>
           <form action="#" method="post">
             <button type="submit" name = "apply" value = '{{job["job_id"]}}' class="btn btn-outline-primary">Apply</button>
