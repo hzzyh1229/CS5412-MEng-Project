@@ -40,7 +40,34 @@ def applications():
   #           query='SELECT * FROM Applications WHERE Applications.email = @email', 
   #               parameters=[dict(name="@email", value='qyc@email.com')], 
   #               enable_cross_partition_query=True))
-  print(application_info)
+  # print(application_info)
+  if request.method == "POST":
+    if "update-OA/VO" in request.form.keys():
+    # if (request.form["update-OA/VO"]):
+      new_status = request.form["update-OA/VO"]
+      info_lst = new_status.split("+")
+      job_id = info_lst[0]
+      new_status = info_lst[1]
+      # for item in container.query_items(
+      #   query='SELECT * FROM Applications WHERE Applications.job_id = @id',
+      #   parameters=[dict(name="@id", value=job_id)],
+      #   enable_cross_partition_query=True):
+      #     container.delete_item(item, partition_key='Widget')
+      container.upsert_item({"email":current_user.get_username()['email'], "job_id": job_id, "status": new_status})
+    if "update-offer" in request.form.keys():
+    # if (request.form["update-offer"]):
+      new_status = request.form["update-offer"]
+      info_lst = new_status.split("+")
+      job_id = info_lst[0]
+      new_status = info_lst[1]
+      container.upsert_item({"email":current_user.get_username()['email'], "job_id": job_id, "status": new_status})
+    if "update-rejected" in request.form.keys():
+    # if (request.form["update-rejected"]):
+      new_status = request.form["update-rejected"]
+      info_lst = new_status.split("+")
+      job_id = info_lst[0]
+      new_status = info_lst[1]
+      container.upsert_item({"email":current_user.get_username()['email'], "job_id": job_id, "status": new_status})
   return render_template("applications.html", applications = application_info)
 
 @user_center_bp.route('/user_center/analysis', methods=['GET', 'POST'])

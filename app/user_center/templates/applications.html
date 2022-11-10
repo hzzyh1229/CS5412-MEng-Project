@@ -5,11 +5,8 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Job</th>
-      <th scope="col">Application date</th>
       <th scope="col">Current status</th>
-      <th scope="col">OA date</th>
-      <th scope="col">VO date</th>
-      <th scope="col">Offer/Reject date</th>
+      <th scope="col">Timeline</th>
       <th scope="col">Update status</th>
     </tr>
   </thead>
@@ -18,35 +15,31 @@
     <tr>
       <th scope="row">{{loop.index}}</th>
       <td>{{application['job_id']}}</td>
-      <td>N/A</td>
-      <!-- <td>{{application['status']}}</td> -->
-      <td>
+      <td>{{application['status']}}</td>
+      <!-- <td>
         <p>
           <span class="output">{{application['status']}}</span>
         </p>
-        <script type="text/javascript">
-          function getOption() {
-            // selectElement = document.querySelector('#update');
-            selectElement = document.getElementById("update"); //{{loop.index}}
-            output = selectElement.value;
-            document.querySelector('.output').textContent = output;
+      </td> -->
+      <td>N/A</td>
+      <td>
+        <script>
+          if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
           }
         </script>
-      </td>
-      <td>N/A</td>
-      <td>N/A</td>
-      <td>N/A</td>
-      <td>
-        <select class="custom-select" id="update">
-          <option value="submitted">submitted</option>
-          <option value="OA">OA</option>
-          <option value="VO">VO</option>
-          <option value="offer">offer</option>
-          <option value="rejected">rejected</option>
-        </select>
-      </td>
-      <td>
-        <button onclick="getOption()">update</button>
+        <form action="#" method="post">
+          <button type="submit" name="update-OA/VO" value="{{application['job_id']}}+received OA/VO"
+            class="btn-primary">got OA/VO</button>
+        </form>
+        <form action="#" method="post">
+          <button type="submit" name="update-offer" value="{{application['job_id']}}+received offer"
+            class="btn-primary">got offer</button>
+        </form>
+        <form action="#" method="post">
+          <button type="submit" name="update-rejected" value="{{application['job_id']}}+rejected"
+            class="btn-primary">got rejected</button>
+        </form>
       </td>
     </tr>
     {% endfor %}
