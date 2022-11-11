@@ -16,6 +16,12 @@
   {% endif %}
 {% endwith %}
 
+<script>
+  if ( window.history.replaceState ) {
+      window.history.replaceState( null, null, window.location.href );
+  }
+</script>
+
 <div class="container">
   <div class="row">
     <div class="col">
@@ -50,10 +56,19 @@
           <p class="card-text">Company: {{job["company"]}}</p>
           <p class="card-text">{{job["type"]}}</p>
           <p class="card-text"><small class="text-muted">Post Time: {{job["date"]}}</small></p>
-          <div class = "col g-2">
-            <a href = '/job{{job["job_id"]}}'>Read More / Apply</a>
-          </div>
-          
+          <p class = "col g-2">
+            <a href = '/job{{job["job_id"]}}'>Read More / Add to Applied </a>
+          </p>
+          <form action="#" method="post">
+            <button type="submit" name = "apply" value = '{{job["job_id"]}}' class="btn btn-outline-primary">Apply</button>
+          </form>
+          {% if error and error_job_id == job["job_id"]%}
+            <!-- <span style="color: red;">[{{ error }}]</span> -->
+            <div class="alert alert-danger alert-dismissible" role="alert">
+              {{error}}
+              <button class="btn-close" aria-label="close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>

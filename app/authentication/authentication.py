@@ -35,13 +35,12 @@ def login():
                 parameters=[dict(name="@email", value=form.email.data)], 
                 enable_cross_partition_query=True))
         if user_info and len(user_info) == 1 and User.check_password(user_info[0]['password'], form.password.data):
-            user_obj = User(email=user_info[0]['email'])
+            user_obj = User(email=user_info[0]['email'], nickname=user_info[0]['name'])
             login_user(user_obj)
             flash('You have successfully logged in')
             return redirect(url_for('home.home'))
         else:
             error = 'Password is incorrect'
-        #     raise Error('Password is not correct.')
     return render_template('authentication/login.html', title='Sign In', form=form, error=error)
 
 @login_bp.route('/logout')

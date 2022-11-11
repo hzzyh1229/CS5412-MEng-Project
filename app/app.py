@@ -5,6 +5,7 @@ from flask_session import Session
 from authentication.authentication import login_bp
 import os
 from home.home import home_bp
+from user_center.user_center import user_center_bp
 from authentication.authentication import login_bp
 from flask_login import LoginManager
 from models import User
@@ -15,6 +16,7 @@ app.config.from_object(Config)
 app.register_blueprint(login_bp)
 app.register_blueprint(home_bp, url_prefix="/")
 login_manager = LoginManager(app)
+app.register_blueprint(user_center_bp)
 
 URL = "https://playground2.documents.azure.com:443/"
 KEY = "v2V0lRtUsNNYEckQfGlvrAOFGjxhxGkKDSge2CXMccGdKB2lSxXmmfMtyuUcjeWuBCaCTntdeGf0QnFB9C8xuQ=="
