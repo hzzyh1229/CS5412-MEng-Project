@@ -40,7 +40,29 @@ def applications():
   #           query='SELECT * FROM Applications WHERE Applications.email = @email', 
   #               parameters=[dict(name="@email", value='qyc@email.com')], 
   #               enable_cross_partition_query=True))
-  print(application_info)
+  # print(application_info)
+  if request.method == "POST":
+    new_status = ""
+    if "update-OA/VO" in request.form.keys():
+      new_status = request.form["update-OA/VO"]
+    if "update-offer" in request.form.keys():
+      new_status = request.form["update-offer"]
+    if "update-rejected" in request.form.keys():
+      new_status = request.form["update-rejected"]
+    info_lst = new_status.split("+")
+    if (len(info_lst) == 2):
+      job_id = info_lst[0]
+      new_status = info_lst[1]
+      for item in container.query_items(
+        query='SELECT * FROM Applications WHERE Applications.job_id = @id',
+        parameters=[dict(name="@id", value=job_id)],
+        enable_cross_partition_query=True):
+          container.delete_item(item, partition_key=current_user.get_username()['email'])
+      container.upsert_item({"email":current_user.get_username()['email'], "job_id": job_id, "status": new_status})
+      application_info = list(container.query_items(
+            query='SELECT * FROM Applications WHERE Applications.email = @email', 
+                parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
+                enable_cross_partition_query=True))
   return render_template("applications.html", applications = application_info)
 
 @user_center_bp.route('/user_center/analysis', methods=['GET', 'POST'])
