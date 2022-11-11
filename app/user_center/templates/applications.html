@@ -1,0 +1,48 @@
+{% extends "user_center.html" %}
+{% block right %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Job</th>
+      <th scope="col">Current status</th>
+      <th scope="col">Timeline</th>
+      <th scope="col">Update status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for application in applications %}
+    <tr>
+      <th scope="row">{{loop.index}}</th>
+      <td>{{application['job_id']}}</td>
+      <td>{{application['status']}}</td>
+      <!-- <td>
+        <p>
+          <span class="output">{{application['status']}}</span>
+        </p>
+      </td> -->
+      <td>N/A</td>
+      <td>
+        <script>
+          if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+          }
+        </script>
+        <form action="#" method="post">
+          <button type="submit" name="update-OA/VO" value="{{application['job_id']}}+received OA/VO"
+            class="btn-primary">got OA/VO</button>
+        </form>
+        <form action="#" method="post">
+          <button type="submit" name="update-offer" value="{{application['job_id']}}+received offer"
+            class="btn-primary">got offer</button>
+        </form>
+        <form action="#" method="post">
+          <button type="submit" name="update-rejected" value="{{application['job_id']}}+rejected"
+            class="btn-primary">got rejected</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
