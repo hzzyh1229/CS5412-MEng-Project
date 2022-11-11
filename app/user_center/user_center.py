@@ -59,6 +59,10 @@ def applications():
         enable_cross_partition_query=True):
           container.delete_item(item, partition_key=current_user.get_username()['email'])
       container.upsert_item({"email":current_user.get_username()['email'], "job_id": job_id, "status": new_status})
+      application_info = list(container.query_items(
+            query='SELECT * FROM Applications WHERE Applications.email = @email', 
+                parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
+                enable_cross_partition_query=True))
   return render_template("applications.html", applications = application_info)
 
 @user_center_bp.route('/user_center/analysis', methods=['GET', 'POST'])
