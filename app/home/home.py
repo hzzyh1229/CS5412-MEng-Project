@@ -58,6 +58,14 @@ def home():
                     error_job_id = job_id
                     print("application already exist")
 
+        elif "filter" in request.form.keys():
+            company = request.form["company"]
+            session["data"] = list(container.query_items(
+        query=f'SELECT * FROM c where c.company = "{company}"',
+        enable_cross_partition_query=True))
+        #print("cur_page is : ",session["page"]+1)
+
+
     n_results = len(session["data"])
     data = session["data"][session["page"]*5: session["page"]*5+5]
     info = {}

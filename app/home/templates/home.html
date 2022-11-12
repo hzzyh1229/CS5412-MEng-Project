@@ -25,16 +25,13 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <input type="text" class = "form-control mb-2 mr-sm-2" placeholder="First name">
-      
+      <form class="form-inline" action="#" method="post">
+        <input type="text" name = "company" placeholder="Company">
+        <label  for="customCheck1">visa-sponsorship</label>
+        <input type="checkbox" name = "visa" id="customCheck1">
+        <button type="submit" name = "filter" value = "filter" class="btn btn-outline-primary">Search</button>
+      </form>   
     </div>
-        <div class="col-md-8">
-              <form class="form-inline" action="#" method="post">
-                  <label class="custom-control-label" for="customCheck1">filter 1</label>
-                  <input type="checkbox" class="custom-control-input" id="customCheck1">
-                  <button type="submit" name = "filter" value = "filter" class="btn btn-outline-primary">Search</button>
-              </form>       
-        </div>      
   </div>
 </div>
 
