@@ -32,6 +32,11 @@ class Job(Resource):
         else:
             print("already existed")
 
+class CompanyJob(Resource):
+    def get(self, company):
+
+
+
 class AllJob(Resource):
     def get(self):
         data = list(job_container.query_items(
@@ -39,8 +44,14 @@ class AllJob(Resource):
         enable_cross_partition_query=True))
         return data[:10]
 
+
 api.add_resource(AllJob, "/jobs")
 api.add_resource(Job, "/jobs/<string:job_id>")
+api.add_resource(Job, "/jobs/company=<string:company>")
+# get job by company
+
+
+
 
 if __name__ == "__main__":
 	app.run(debug=True)
