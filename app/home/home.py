@@ -65,7 +65,6 @@ def home():
         enable_cross_partition_query=True))
         #print("cur_page is : ",session["page"]+1)
 
-
     n_results = len(session["data"])
     data = session["data"][session["page"]*5: session["page"]*5+5]
     info = {}
