@@ -1,7 +1,7 @@
 import requests
 
 BASE = "http://127.0.0.1:5000/"
-
+BASE = "https://cs5412cloudjobboard.azurewebsites.net/"
 # response = requests.get(BASE + "jobs")
 # print(response.json())
 
@@ -9,7 +9,7 @@ BASE = "http://127.0.0.1:5000/"
 # print(response.json())
 import json
 
-f = open('LinkedIn202210281807.json')
+#f = open('LinkedIn202210281807.json')
     
 # returns JSON object as 
 # a dictionary
@@ -85,10 +85,10 @@ f = open('LinkedIn202210281807.json')
 # api.add_resource(Application, "/applications/<string:job_id>/<string:email>/<string:status>")
 
 
-#response = requests.get(BASE + 'applications/null/test1@gmail.com/null')
-#response = requests.get(BASE + 'applications/3335080633/test1@gmail.com/null')
-#response = requests.get(BASE + 'applications/3335080633/null/null')
-
+response = requests.get(BASE + 'applications/null/test1@gmail.com/null')
+response = requests.get(BASE + 'applications/3335080633/test1@gmail.com/null')
+response = requests.get(BASE + 'applications/3335080633/null/null')
+print(response.json())
 #response = requests.put(BASE + 'applications/3335080633/test1@gmail.com/submitted')
 
 
@@ -101,8 +101,8 @@ f = open('LinkedIn202210281807.json')
 #           application_container.delete_item(item, partition_key=email)
 
 # api.add_resource(DeleteApplication, "/delete/applications/<string:job_id>/<string:email>")
-response = requests.put(BASE + '/delete/applications/3335080633/test1@gmail.com')
-print(response.json())
+#response = requests.put(BASE + '/delete/applications/3335080633/test1@gmail.com')
+
 
 # class User(Resource):
 #     def get(self, email):
