@@ -10,11 +10,13 @@ from authentication.authentication import login_bp
 from flask_login import LoginManager
 from models import User
 from azure.cosmos import CosmosClient
+from forum.forum import forum_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
 app.register_blueprint(login_bp)
 app.register_blueprint(home_bp, url_prefix="/")
+app.register_blueprint(forum_bp, url_prefix="/forum")
 login_manager = LoginManager(app)
 app.register_blueprint(user_center_bp)
 

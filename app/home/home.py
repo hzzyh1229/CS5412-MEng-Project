@@ -22,19 +22,23 @@ application_container = database.get_container_client(CONTAINER_NAME2)
 @home_bp.route("/", methods = ["POST", "GET"])
 def home():
     #init steps
+    jobs_info = []
     if not session.get("page"): 
         session["page"] = 0
     if not session.get("data"):
-        session["data"] = list(container.query_items(
+        jobs_info = list(container.query_items(
         query='SELECT * FROM c',
         enable_cross_partition_query=True))
+        session["data"] = jobs_info
+    else:
+        jobs_info = session["data"]
 
     error = None
     error_job_id = None
     if request.method == "POST":
         #change pages
         if "changePage" in request.form.keys():
-            if request.form["changePage"] == "next":
+            if request.form["changePage"] == "next" and (session["page"]+1)*5 < len(jobs_info):
                 session["page"] += 1
             elif request.form["changePage"] == "last" and session["page"] > 0:
                 session["page"] -= 1
