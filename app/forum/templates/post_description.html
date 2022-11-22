@@ -1,0 +1,32 @@
+{% extends "home_base.html" %}
+{% block title%} Post {% endblock %}
+{% block body %}     
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<div class = "container">
+    <div class = "row">
+        <p></p>
+    </div>
+    <div class = "row">
+        <h4>Title: {{post_info["title"]}}</h4>
+        <p>Company: {{post_info["company"]}}</p>
+        <!-- <p>Post Owner: {{post_info["postOwner"]}}</p> -->  
+    </div>
+    <div class="border-top my-3"></div>
+    <div class = "row">
+        {% for comment in comments_info %}
+        <div class = "row">
+            <p>User: {{comment["user"]}}</p>
+            <p>{{comment["content"]}}</p>
+        </div>
+        <div class="border-top my-3"></div>
+        {% endfor %}
+    </div>
+    <div class = "container">
+        <form action="#" method="post">
+            <a href="/forum/create_comment/{{post_info['title']}}/{{post_info['postOwner']}}" class="btn btn-info" role="button">Create Comment</a>
+        </form>
+    </div> 
+
+</div>
+{% endblock %}
