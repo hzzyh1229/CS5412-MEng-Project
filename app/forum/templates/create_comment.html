@@ -1,0 +1,21 @@
+{% extends "home_base.html" %}
+{% block title%} Forum {% endblock %}
+{% block body %}  
+   
+
+<div class="container">
+    <form method="post">
+
+        <label for="content">Content</label>
+        <br>
+        <textarea name="content"
+                placeholder="Post content"
+                rows="15"
+                cols="60"
+                >{{ request.form['content'] }}</textarea>
+        <br>
+        
+        <button type="submit">Submit</button>
+    </form>
+</div>
+{% endblock %}

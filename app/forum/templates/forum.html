@@ -31,8 +31,10 @@
           <h5 class="card-title">Title: {{post["title"]}}</h5>
           <p class="card-text">Company: {{post["company"]}}</p>
           <p class="card-text">{{post["postOwner"]}}</p>
-          <p class="card-text"><small class="text-muted">Post Time: {{post["date"]}}</small></p>
-
+          <p class="card-text"><small class="text-muted">Post Time: {{post["time"]}}</small></p>
+          <p class = "col g-2">
+            <a href = '/forum/{{post["postOwner"]}}/{{post["title"]}}'>Read More </a>
+          </p>
         </div>
       </div>
     </div>

@@ -52,6 +52,11 @@ def getAllPosts():
     info["num_results"] = n_results
     return render_template("forum.html", info = info)
 
+def getTime():
+    now = datetime.now() # current date and time
+    date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+    return date_time
+
 @forum_bp.route('/createPost', methods=['GET', 'POST'])
 def createPost():
     """
@@ -65,7 +70,7 @@ def createPost():
         content = request.form['content']
         company = request.form['company']
         postOwner = current_user.get_username()['email']
-        time = datetime.today().strftime('%Y%m%d%H%M')
+        time = getTime()
         print(time)
         if not title:
             flash('Title is required!')
@@ -79,3 +84,30 @@ def createPost():
             session["post_data"] = list(posts_container.query_items(query='SELECT * FROM Posts', enable_cross_partition_query=True))
         return redirect(url_for('forum_bp.getAllPosts'))
     return render_template("create_post.html")
+
+@forum_bp.route("/<post_owner>/<title>")
+def post(post_owner, title):
+    post_info = list(posts_container.query_items(query=f'SELECT * FROM posts WHERE posts.title = "{title}" AND posts.postOwner = "{post_owner}"', enable_cross_partition_query=True))[0]
+    print("post_info: ")
+    print(post_info["title"])
+    comments_info = list(comment_container.query_items(query=f'SELECT * FROM c WHERE c.postId = "{post_owner+title}"', enable_cross_partition_query=True))
+    return render_template("post_description.html", post_info = post_info, comments_info = comments_info)
+
+@forum_bp.route('/create_comment/<title>/<post_owner>', methods=['GET', 'POST'])
+def createComment(title, post_owner):
+    """
+    create a comment
+    """
+    if not current_user.is_authenticated:
+        return redirect(url_for('login_bp.login'))
+    if request.method == 'POST':
+        content = request.form['content']
+        user = current_user.get_username()['email']
+        time = datetime.today().strftime('%Y%m%d%H%M')
+        if not content:
+            flash('Content is required!')
+        else:
+            comment_container.upsert_item({'postId': post_owner+title, 'user': user, 
+                'content': content, 'time': time})
+        return redirect(url_for('forum_bp.post', post_owner=post_owner, title=title))
+    return render_template("create_comment.html")
