@@ -4,25 +4,25 @@
 
 <h1 class="text-center">User Center</h1>
 <div class="container overflow-hidden">
-  <div class="row gx-5">
-    <div class="col-3">
-      <div class="row mt-5">
+  <div class="col">
+    <div class="row">
+      <div class="col">
         <a class="btn btn-primary btn-lg" href="{{ url_for('user_center_bp.profile') }}">
           profile
         </a>
       </div>
-      <div class="row mt-5">
+      <div class="col">
         <a class="btn btn-primary btn-lg" href="{{ url_for('user_center_bp.applications') }}">
           applications and timelines
         </a>
       </div>
-      <div class="row mt-5">
+      <div class="col">
         <a class="btn btn-primary btn-lg" href="{{ url_for('user_center_bp.analysis') }}">
           analysis
         </a>
       </div>
     </div>
-    <div class="col-8">
+    <div class="col">
       {% block right %} {% endblock%}
     </div>
   </div>

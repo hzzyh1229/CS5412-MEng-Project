@@ -6,7 +6,7 @@
       <th scope="col">#</th>
       <th scope="col">Job</th>
       <th scope="col">Current status</th>
-      <th scope="col">Timeline</th>
+      <th scope="col" style="width: 50%">Timeline</th>
       <th scope="col">Update status</th>
     </tr>
   </thead>
@@ -21,7 +21,11 @@
           <span class="output">{{application['status']}}</span>
         </p>
       </td> -->
-      <td>N/A</td>
+      <td>applied on: {{application['apply_date']}},
+        got OA/VO on: {{application['oa_vo_date']}},<br>
+        received offer on: {{application['offer_date']}},
+        got rejected on: {{application['reject_date']}}
+      </td>
       <td>
         <script>
           if (window.history.replaceState) {

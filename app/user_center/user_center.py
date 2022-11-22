@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from azure.cosmos import CosmosClient
+from datetime import datetime
 
 user_center_bp = Blueprint('user_center_bp', __name__, template_folder='templates')
 URL = "https://playground2.documents.azure.com:443/"
@@ -32,38 +33,42 @@ def profile():
 @user_center_bp.route('/user_center/applications', methods=['GET', 'POST'])
 @login_required
 def applications():
-  application_info = list(container.query_items(
-            query='SELECT * FROM Applications WHERE Applications.email = @email', 
-                parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
-                enable_cross_partition_query=True))
-  # application_info = list(container.query_items(
-  #           query='SELECT * FROM Applications WHERE Applications.email = @email', 
-  #               parameters=[dict(name="@email", value='qyc@email.com')], 
-  #               enable_cross_partition_query=True))
-  # print(application_info)
   if request.method == "POST":
     new_status = ""
+    update_type = -1;
     if "update-OA/VO" in request.form.keys():
       new_status = request.form["update-OA/VO"]
+      update_type = 0;
     if "update-offer" in request.form.keys():
       new_status = request.form["update-offer"]
+      update_type = 1;
     if "update-rejected" in request.form.keys():
       new_status = request.form["update-rejected"]
+      update_type = 2;
     info_lst = new_status.split("+")
     if (len(info_lst) == 2):
       job_id = info_lst[0]
       new_status = info_lst[1]
-      #delete repetitive data entries
+      cur_date = datetime.today().strftime('%Y/%m/%d')
+      # delete repetitive data entries and get old info
       for item in container.query_items(
         query='SELECT * FROM Applications WHERE Applications.job_id = @id',
         parameters=[dict(name="@id", value=job_id)],
         enable_cross_partition_query=True):
+          apply_date = item["apply_date"] if "apply_date" in item else "N/A"
+          oa_vo_date = item["oa_vo_date"] if "oa_vo_date" in item else "N/A"
+          offer_date = item["offer_date"] if "offer_date" in item else "N/A"
+          reject_date = item["reject_date"] if "reject_date" in item else "N/A"
           container.delete_item(item, partition_key=current_user.get_username()['email'])
-      container.upsert_item({"email":current_user.get_username()['email'], "job_id": job_id, "status": new_status})
-      application_info = list(container.query_items(
-            query='SELECT * FROM Applications WHERE Applications.email = @email', 
-                parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
-                enable_cross_partition_query=True))
+      container.upsert_item({"email":current_user.get_username()['email'], "job_id": job_id, "status": new_status, 
+      "apply_date": apply_date, "oa_vo_date": cur_date if update_type == 0 else oa_vo_date, 
+      "offer_date": cur_date if update_type == 1 else offer_date, 
+      "reject_date": cur_date if update_type == 2 else reject_date})
+  # get application_info after update
+  application_info = list(container.query_items(
+        query='SELECT * FROM Applications WHERE Applications.email = @email', 
+            parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
+            enable_cross_partition_query=True))
   return render_template("applications.html", applications = application_info)
 
 @user_center_bp.route('/user_center/analysis', methods=['GET', 'POST'])
