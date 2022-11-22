@@ -53,6 +53,7 @@ def applications():
     if (len(info_lst) == 2):
       job_id = info_lst[0]
       new_status = info_lst[1]
+      #delete repetitive data entries
       for item in container.query_items(
         query='SELECT * FROM Applications WHERE Applications.job_id = @id',
         parameters=[dict(name="@id", value=job_id)],
