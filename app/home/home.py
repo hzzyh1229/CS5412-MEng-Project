@@ -2,6 +2,7 @@ from azure.cosmos import CosmosClient
 from multiprocessing import JoinableQueue
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from requests import request
+from datetime import datetime
 
 from flask import Flask, redirect, url_for, render_template, Blueprint, session, request
 
@@ -44,13 +45,15 @@ def home():
             if (request.form["apply"]):
                 job_id = request.form["apply"]
                 user_email = current_user.get_username()['email']
+                cur_date = datetime.today().strftime('%Y/%m/%d')
                 application_info = list(application_container.query_items(
                     query='SELECT * FROM c WHERE c.job_id = @job_id AND c.email = @email', 
                     parameters=[dict(name = "@job_id", value = job_id), dict(name="@email", value=user_email)], 
                     enable_cross_partition_query=True))
                 if (len(application_info) == 0):
-                    application_container.upsert_item({"email":user_email, 
-                        "job_id": job_id, "status": "submitted"})
+                    application_container.upsert_item({"email":user_email, "job_id": job_id, 
+                    "status": "submitted", "apply_date": cur_date, "oa_vo_date": "N/A", 
+                    "offer_date": "N/A", "reject_date": "N/A"})
                     # print(job_id)
                     # print(current_user.get_username()['email'])
                 else:
