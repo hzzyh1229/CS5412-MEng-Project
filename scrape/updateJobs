@@ -1,4 +1,8 @@
 from azure.cosmos import CosmosClient
+import json
+import spacy
+
+# create CountVectorizer object
 
 URL = "https://playground2.documents.azure.com:443/"
 KEY = "v2V0lRtUsNNYEckQfGlvrAOFGjxhxGkKDSge2CXMccGdKB2lSxXmmfMtyuUcjeWuBCaCTntdeGf0QnFB9C8xuQ=="
@@ -17,17 +21,35 @@ def main():
     # returns JSON object as 
     # a dictionary
     data = json.load(f)
-    #container.delete_item(item, partition_key='/id')
 
-    print(list(container.query_items(query=f'SELECT * FROM c WHERE c.job_id = "3328007399"', enable_cross_partition_query=True)))
-    print(len(data))
     i = 0
+    nlp = spacy.load('en_core_web_sm')
+
+    # delete all jobs
+    for item in container.query_items(
+        query=f'SELECT * FROM c', enable_cross_partition_query=True):
+            container.delete_item(item["id"], partition_key=item["job_id"])
+
+
     for job in data[:100]:
         print(i)
         i+=1
-        temp = list(container.query_items(query=f'SELECT * FROM c WHERE c.job_id = "{job["job_id"]}"', enable_cross_partition_query=True))
-        if(len(temp) == 0):
-            container.upsert_item(job)
+
+        for item in container.query_items(
+        query=f'SELECT * FROM c WHERE c.job_id = "{job["job_id"]}"', enable_cross_partition_query=True):
+            container.delete_item(item["id"], partition_key=job["job_id"])
+
+        summary = job["position"] + " " + job["company"] + " " + job["type"]
+        summary = nlp(summary).vector.tolist()
+        job["word_vec"] = summary
+        job = json.dumps(job)
+        job = json.loads(job)
+        #print(job)
+        container.upsert_item(job)
+
+    items = list(container.query_items(
+    query=f'SELECT * FROM c', enable_cross_partition_query=True))
+    print(len(items))
 
 if __name__ == "__main__":
     main()

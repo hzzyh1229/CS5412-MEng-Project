@@ -6,6 +6,8 @@ api = Api(app)
 
 import os
 from azure.cosmos import CosmosClient
+import numpy as np
+from numpy.linalg import norm
 
 URL = "https://playground2.documents.azure.com:443/"
 KEY = "v2V0lRtUsNNYEckQfGlvrAOFGjxhxGkKDSge2CXMccGdKB2lSxXmmfMtyuUcjeWuBCaCTntdeGf0QnFB9C8xuQ=="
@@ -62,6 +64,47 @@ class AllJob(Resource):
 api.add_resource(AllJob, "/jobs")
 api.add_resource(Job, "/jobs/<string:job_id>")
 api.add_resource(CompanyJob, "/jobs/company=<string:company>")
+
+
+# input is user email, recommend jobs for this user
+class RecommendJob(Resource):
+    def get(self, email):
+
+        # email = "test1@gmail.com"
+        all_jobs = list(job_container.query_items(
+        query='SELECT * FROM c',
+        enable_cross_partition_query=True))
+
+        past_applications = list(application_container.query_items(
+            query= f'SELECT * FROM c WHERE c.email = "{email}"',
+            enable_cross_partition_query=True))
+
+        # first getting the mean vec of this person
+        applicant_vec = np.array([0.0] * 96)
+        for application in past_applications:
+            job_id = application["job_id"]
+            job_vec = list(job_container.query_items(
+            query= f'SELECT * FROM c WHERE c.job_id = "{job_id}"',
+            enable_cross_partition_query=True))[0]["word_vec"]
+            applicant_vec += np.array(job_vec)
+        applicant_vec /= len(past_applications)
+
+        top_data = []
+
+        for job in all_jobs:
+            job_vec = job["word_vec"]
+            cosine = np.dot(applicant_vec, job_vec)/(norm(applicant_vec)*norm(job_vec))
+            top_data.append([cosine, job])
+
+        top_data.sort(reverse=True, key=lambda x: x[0])
+        top_data = top_data[:10]
+        recommended_jobs = []
+        for data in top_data:
+            recommended_jobs.append(data[1])
+
+        return recommended_jobs
+
+api.add_resource(RecommendJob, "/jobs/recommend/<string:email>")
 
 # get and post for applicatoin
 # only have email or both have email and job_id
