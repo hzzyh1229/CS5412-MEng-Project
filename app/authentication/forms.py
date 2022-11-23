@@ -8,6 +8,9 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length
 # from .. import models
 from models import User
 from azure.cosmos import CosmosClient
+import requests 
+
+API_BASE = "https://cs5412cloudjobboard.azurewebsites.net/"
 
 URL = "https://playground2.documents.azure.com:443/"
 KEY = "v2V0lRtUsNNYEckQfGlvrAOFGjxhxGkKDSge2CXMccGdKB2lSxXmmfMtyuUcjeWuBCaCTntdeGf0QnFB9C8xuQ=="
@@ -27,10 +30,11 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_email(self, email):
-        user_info = list(container.query_items(
-            query='SELECT * FROM Users WHERE Users.email = @email', 
-                parameters=[dict(name="@email", value=email.data)], 
-                enable_cross_partition_query=True))
+        # user_info = list(container.query_items(
+        #     query='SELECT * FROM Users WHERE Users.email = @email', 
+        #         parameters=[dict(name="@email", value=email.data)], 
+        #         enable_cross_partition_query=True))
+        user_info = requests.get(API_BASE + f"users/{email}").json()
         if (len(user_info) > 0):
             raise ValidationError('Email already registered.')
 
@@ -43,10 +47,11 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
     def validate_email(self, email):
-        user_info = list(container.query_items(
-            query='SELECT * FROM Users WHERE Users.email = @email', 
-                parameters=[dict(name="@email", value=email.data)], 
-                enable_cross_partition_query=True))
+        # user_info = list(container.query_items(
+        #     query='SELECT * FROM Users WHERE Users.email = @email', 
+        #         parameters=[dict(name="@email", value=email.data)], 
+        #         enable_cross_partition_query=True))
+        user_info = requests.get(API_BASE + f"users/{email}").json()
         if (len(user_info) == 0):
             raise ValidationError('Email is not registered.')
 
