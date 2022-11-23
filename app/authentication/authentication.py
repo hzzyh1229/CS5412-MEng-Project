@@ -6,6 +6,9 @@ from werkzeug.urls import url_parse
 from azure.cosmos import CosmosClient
 # from .. import app
 
+import requests
+API_BASE = "https://cs5412cloudjobboard.azurewebsites.net/"
+
 login_bp = Blueprint('login_bp', __name__, template_folder='templates')
 # login_bp = Blueprint('login_bp', __name__,
 #     template_folder='templates',
@@ -30,10 +33,11 @@ def login():
     form = LoginForm()
     error = None
     if form.validate_on_submit():
-        user_info = list(container.query_items(
-            query='SELECT * FROM Users WHERE Users.email = @email', 
-                parameters=[dict(name="@email", value=form.email.data)], 
-                enable_cross_partition_query=True))
+        # user_info = list(container.query_items(
+        #     query='SELECT * FROM Users WHERE Users.email = @email', 
+        #         parameters=[dict(name="@email", value=form.email.data)], 
+        #         enable_cross_partition_query=True))
+        user_info = requests.get(API_BASE + f"users/{form.email.data}").json()
         if user_info and len(user_info) == 1 and User.check_password(user_info[0]['password'], form.password.data):
             user_obj = User(email=user_info[0]['email'], nickname=user_info[0]['name'])
             login_user(user_obj)

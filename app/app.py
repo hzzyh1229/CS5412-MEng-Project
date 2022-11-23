@@ -11,6 +11,7 @@ from flask_login import LoginManager
 from models import User
 from azure.cosmos import CosmosClient
 from forum.forum import forum_bp
+import requests
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -19,6 +20,8 @@ app.register_blueprint(home_bp, url_prefix="/")
 app.register_blueprint(forum_bp, url_prefix="/forum")
 login_manager = LoginManager(app)
 app.register_blueprint(user_center_bp)
+
+API_BASE = "https://cs5412cloudjobboard.azurewebsites.net/"
 
 URL = "https://playground2.documents.azure.com:443/"
 KEY = "v2V0lRtUsNNYEckQfGlvrAOFGjxhxGkKDSge2CXMccGdKB2lSxXmmfMtyuUcjeWuBCaCTntdeGf0QnFB9C8xuQ=="
@@ -46,9 +49,11 @@ def load_user(username):
         query='SELECT Users.email FROM Users WHERE Users.email = @username',
         parameters=[dict(name="@username", value=username)], 
         enable_cross_partition_query=True))
+    # user_email = requests.get(API_BASE + f'users/{username}').json()
     if not user_email:
         return None
     return User(email=user_email[0])
+    # return User(email=user_email[0])
 
 if __name__ == "__main__":
     app.run(debug=True)

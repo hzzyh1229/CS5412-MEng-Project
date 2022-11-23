@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from azure.cosmos import CosmosClient
 from datetime import datetime
+import requests
+API_BASE = "https://cs5412cloudjobboard.azurewebsites.net/"
 
 user_center_bp = Blueprint('user_center_bp', __name__, template_folder='templates')
 URL = "https://playground2.documents.azure.com:443/"
@@ -51,10 +53,11 @@ def applications():
       new_status = info_lst[1]
       cur_date = datetime.today().strftime('%Y/%m/%d')
       # delete repetitive data entries and get old info
-      for item in container.query_items(
-        query='SELECT * FROM Applications WHERE Applications.job_id = @id',
-        parameters=[dict(name="@id", value=job_id)],
-        enable_cross_partition_query=True):
+      # for item in container.query_items(
+      #   query='SELECT * FROM Applications WHERE Applications.job_id = @id',
+      #   parameters=[dict(name="@id", value=job_id)],
+      #   enable_cross_partition_query=True):
+      for item in requests.get(API_BASE + f"/applications/{job_id}/null/any"):
           apply_date = item["apply_date"] if "apply_date" in item else "N/A"
           oa_vo_date = item["oa_vo_date"] if "oa_vo_date" in item else "N/A"
           offer_date = item["offer_date"] if "offer_date" in item else "N/A"

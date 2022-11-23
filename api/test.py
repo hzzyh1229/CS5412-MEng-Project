@@ -54,8 +54,8 @@ import json
 #         enable_cross_partition_query=True))
 #         return data[:10]
 # api.add_resource(AllJob, "/jobs")
-#response = requests.get(BASE + f'jobs')
-
+response = requests.get(BASE + f'jobs')
+print(response)
 
 # # get and post for applicatoin
 # # only have email or both have email and job_id
@@ -88,7 +88,7 @@ import json
 response = requests.get(BASE + 'applications/null/test1@gmail.com/null')
 response = requests.get(BASE + 'applications/3335080633/test1@gmail.com/null')
 response = requests.get(BASE + 'applications/3335080633/null/null')
-print(response.json())
+#print(response.json())
 #response = requests.put(BASE + 'applications/3335080633/test1@gmail.com/submitted')
 
 

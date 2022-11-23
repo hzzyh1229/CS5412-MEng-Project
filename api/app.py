@@ -35,7 +35,7 @@ class Job(Resource):
         data = list(job_container.query_items(
         query=f'SELECT * FROM c WHERE c.job_id = "{job_id}"',
         enable_cross_partition_query=True))
-        return data[0]
+        return data
 
     def put(self, job_id):
         job = request.form
@@ -78,7 +78,8 @@ class RecommendJob(Resource):
         past_applications = list(application_container.query_items(
             query= f'SELECT * FROM c WHERE c.email = "{email}"',
             enable_cross_partition_query=True))
-
+        if len(past_applications) == 0:
+            return all_jobs[:10]
         # first getting the mean vec of this person
         applicant_vec = np.array([0.0] * 96)
         for application in past_applications:
@@ -155,6 +156,18 @@ class User(Resource):
 
 
 api.add_resource(User, "/users/<string:email>")
+
+class UserEmail(Resource):
+    def get(self, email):
+        data = list(user_container.query_items(
+        query='SELECT Users.email FROM Users WHERE Users.email = @username',
+        parameters=[dict(name="@username", value=email)], 
+        enable_cross_partition_query=True))
+        return data
+
+
+api.add_resource(UserEmail, "/users/email/<string:email>")
+
 
 if __name__ == "__main__":
     app.run()
