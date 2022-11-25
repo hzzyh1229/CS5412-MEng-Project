@@ -45,6 +45,8 @@ def home():
     
         #apply job
         elif "apply" in request.form.keys():
+            if not current_user.is_authenticated:
+                return redirect(url_for('login_bp.login'))
             if (request.form["apply"]):
                 job_id = request.form["apply"]
                 user_email = current_user.get_username()['email']
