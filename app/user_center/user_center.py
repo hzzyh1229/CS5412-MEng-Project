@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from azure.cosmos import CosmosClient
 from datetime import datetime
@@ -78,3 +78,13 @@ def applications():
 @login_required
 def analysis():
   return render_template("analysis.html")
+
+@user_center_bp.route('/logout')
+@login_required
+def logout():
+    """
+    return the logout page
+    """
+    logout_user()
+    flash('Log out successfully.')
+    return redirect(url_for('home.home'))

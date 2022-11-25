@@ -47,16 +47,6 @@ def login():
             error = 'Password is incorrect'
     return render_template('authentication/login.html', title='Sign In', form=form, error=error)
 
-@login_bp.route('/logout')
-@login_required
-def logout():
-    """
-    return the logout page
-    """
-    logout_user()
-    flash('Log out successfully.')
-    return redirect(url_for('home.home'))
-
 @login_bp.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
