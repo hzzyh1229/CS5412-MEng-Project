@@ -45,15 +45,14 @@ app.secret_key = "Mario" # necessary step for session
 
 @login_manager.user_loader
 def load_user(username):
-    user_email = list(container.query_items(
-        query='SELECT Users.email FROM Users WHERE Users.email = @username',
-        parameters=[dict(name="@username", value=username)], 
-        enable_cross_partition_query=True))
-    # user_email = requests.get(API_BASE + f'users/{username}').json()
+    # user_email = list(container.query_items(
+    #     query='SELECT Users.email FROM Users WHERE Users.email = @username',
+    #     parameters=[dict(name="@username", value=username)], 
+    #     enable_cross_partition_query=True))
+    user_email = requests.get(API_BASE + f'users/email/{username}').json()
     if not user_email:
         return None
     return User(email=user_email[0])
-    # return User(email=user_email[0])
 
 if __name__ == "__main__":
     app.run(debug=True)

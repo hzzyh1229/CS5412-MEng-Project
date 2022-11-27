@@ -30,11 +30,11 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_email(self, email):
-        # user_info = list(container.query_items(
-        #     query='SELECT * FROM Users WHERE Users.email = @email', 
-        #         parameters=[dict(name="@email", value=email.data)], 
-        #         enable_cross_partition_query=True))
-        user_info = requests.get(API_BASE + f"users/{email}").json()
+        user_info = list(container.query_items(
+            query='SELECT * FROM Users WHERE Users.email = @email', 
+                parameters=[dict(name="@email", value=email.data)], 
+                enable_cross_partition_query=True))
+        # user_info = requests.get(API_BASE + f"users/{email}").json()
         if (len(user_info) > 0):
             raise ValidationError('Email already registered.')
 
@@ -47,11 +47,11 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
     def validate_email(self, email):
-        # user_info = list(container.query_items(
-        #     query='SELECT * FROM Users WHERE Users.email = @email', 
-        #         parameters=[dict(name="@email", value=email.data)], 
-        #         enable_cross_partition_query=True))
-        user_info = requests.get(API_BASE + f"users/{email}").json()
+        user_info = list(container.query_items(
+            query='SELECT * FROM Users WHERE Users.email = @email', 
+                parameters=[dict(name="@email", value=email.data)], 
+                enable_cross_partition_query=True))
+        # user_info = requests.get(API_BASE + f"users/{email}").json()
         if (len(user_info) == 0):
             raise ValidationError('Email is not registered.')
 
