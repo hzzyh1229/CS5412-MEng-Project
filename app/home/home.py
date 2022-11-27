@@ -56,11 +56,11 @@ def home():
                 job_id = request.form["apply"]
                 user_email = current_user.get_username()['email']
                 cur_date = datetime.today().strftime('%Y/%m/%d')
-                application_info = list(application_container.query_items(
-                    query='SELECT * FROM c WHERE c.job_id = @job_id AND c.email = @email', 
-                    parameters=[dict(name = "@job_id", value = job_id), dict(name="@email", value=user_email)], 
-                    enable_cross_partition_query=True))
-                #application_info = requests.get(API_BASE + f"/applications/{job_id}/{user_email}/any").json()
+                # application_info = list(application_container.query_items(
+                #     query='SELECT * FROM c WHERE c.job_id = @job_id AND c.email = @email', 
+                #     parameters=[dict(name = "@job_id", value = job_id), dict(name="@email", value=user_email)], 
+                #     enable_cross_partition_query=True))
+                application_info = requests.get(API_BASE + f"/applications/{job_id}/{user_email}/any").json()
                 if (len(application_info) == 0):
                     application_container.upsert_item({"email":user_email, "job_id": job_id, 
                     "status": "submitted", "apply_date": cur_date, "oa_vo_date": "N/A", 
