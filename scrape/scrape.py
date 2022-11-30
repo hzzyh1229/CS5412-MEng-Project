@@ -1,6 +1,3 @@
-from azure.cosmos import CosmosClient
-import json
-import spacy
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -9,8 +6,6 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import time
 import json
-# create CountVectorizer object
-nlp = spacy.load('en_core_web_sm')
 
 driver = webdriver.Chrome(ChromeDriverManager().install())
 # Opening linkedIn's login page
@@ -24,7 +19,7 @@ pword = driver.find_element(By.ID, "password")
 pword.send_keys("cs5412")
 # Clicking on the log in button
 driver.find_element(By.XPATH, "//button[@type='submit']").click()
-#time.sleep(200)
+
 # Opening job's page
 job_url = "https://www.linkedin.com/jobs/"
 driver.get(job_url)
@@ -102,7 +97,7 @@ page_lst = driver.find_element(By.CLASS_NAME, "artdeco-pagination__pages")
 pages = page_lst.find_elements(By.TAG_NAME, "li")
 start = int(pages[0].text)
 end = int(pages[-1].text)
-end = min(1, end)
+end = max(20, end)
 data = []
 time.sleep(2)
 
@@ -120,42 +115,7 @@ for page in range(start, end+1):
         print("something wrong here :(")
 
 
-URL = "https://playground2.documents.azure.com:443/"
-KEY = "v2V0lRtUsNNYEckQfGlvrAOFGjxhxGkKDSge2CXMccGdKB2lSxXmmfMtyuUcjeWuBCaCTntdeGf0QnFB9C8xuQ=="
-client = CosmosClient(URL, credential=KEY)
-DATABASE_NAME = 'Job Board'
-database = client.get_database_client(DATABASE_NAME)
-
-CONTAINER_NAME = 'Positions'
-container = database.get_container_client(CONTAINER_NAME)
-import json
-
-# # Opening JSON file
-# f = open('LinkedIn202210281807.json')
-    
-# # returns JSON object as 
-# # a dictionary
-# data = json.load(f)
-i = 0
-# for item in container.query_items(
-#     query=f'SELECT * FROM c', enable_cross_partition_query=True):
-#         container.delete_item(item["id"], partition_key=item["job_id"])
-
-
-for job in data:
-    print(i)
-    i+=1
-
-    for item in container.query_items(
-    query=f'SELECT * FROM c WHERE c.job_id = "{job["job_id"]}"', enable_cross_partition_query=True):
-        container.delete_item(item["id"], partition_key=job["job_id"])
-
-    summary = job["position"] + " " + job["company"] + " " + job["type"]
-    summary = nlp(summary).vector.tolist()
-    job["word_vec"] = summary
-    print(job)
-    container.upsert_item(job)
-
-items = list(container.query_items(
-query=f'SELECT * FROM c', enable_cross_partition_query=True))
-print(len(items))
+# dump into json file
+json_object = json.dumps(data)
+with open(("LinkedIn" + datetime.today().strftime('%Y%m%d%H%M') + ".json"), "w") as outfile:
+    outfile.write(json_object)

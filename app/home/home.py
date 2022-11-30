@@ -4,7 +4,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from requests import request
 from datetime import datetime
 import requests
-from flask import Flask, redirect, url_for, render_template, Blueprint, session, request
+from flask import Flask, redirect, url_for, render_template, Blueprint, session, request, flash
 
 home_bp = Blueprint("home", __name__, static_folder="static",  static_url_path='/static/home', template_folder="templates")
 
@@ -82,6 +82,7 @@ def home():
                 session["data"] = requests.get(API_BASE + f"/jobs/company={company}").json()
         #print("cur_page is : ",session["page"]+1)
         elif "recommend" in request.form.keys():
+            flash('Here are the recommended jobs for you!')
             user_email = current_user.get_username()['email']
             session["data"] = requests.get(API_BASE + f"/jobs/recommend/{user_email}").json()
 
@@ -96,5 +97,5 @@ def home():
 @home_bp.route("/job<job_id>")
 def position(job_id):
     #job_info = list(container.query_items(query=f'SELECT * FROM c WHERE c.job_id = "{job_id}"', enable_cross_partition_query=True))[0]
-    job_info = requests.get(API_BASE + f"jobs/{job_id}").json()
+    job_info = requests.get(API_BASE + f"jobs/{job_id}").json()[0]
     return render_template("job_description.html", job_info = job_info)
