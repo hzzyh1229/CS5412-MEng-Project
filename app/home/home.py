@@ -5,7 +5,7 @@ from requests import request
 from datetime import datetime
 import requests
 from flask import Flask, redirect, url_for, render_template, Blueprint, session, request, flash
-
+from cache import cache
 home_bp = Blueprint("home", __name__, static_folder="static",  static_url_path='/static/home', template_folder="templates")
 
 URL = "https://playground2.documents.azure.com:443/"
@@ -23,7 +23,6 @@ API_BASE = "https://cs5412cloudjobboard.azurewebsites.net/"
 
 @home_bp.route("/", methods = ["POST", "GET"])
 def home():
-    #init steps
     jobs_info = []
     if not session.get("page"): 
         session["page"] = 0
@@ -97,6 +96,7 @@ def home():
     return render_template("home.html", info = info, error = error, error_job_id = error_job_id)
 
 @home_bp.route("/job<job_id>")
+@cache.cached(timeout=60)
 def position(job_id):
     #job_info = list(container.query_items(query=f'SELECT * FROM c WHERE c.job_id = "{job_id}"', enable_cross_partition_query=True))[0]
     job_info = requests.get(API_BASE + f"jobs/{job_id}").json()[0]

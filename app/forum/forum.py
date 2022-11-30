@@ -3,6 +3,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from models import User
 from azure.cosmos import CosmosClient
 from datetime import datetime
+from cache import cache
 
 forum_bp = Blueprint('forum_bp', __name__, template_folder='templates')
 URL = "https://playground2.documents.azure.com:443/"
@@ -17,6 +18,7 @@ COMMENTS_CONTAINER_NAME = 'Comments'
 comment_container = database.get_container_client(COMMENTS_CONTAINER_NAME)
 
 @forum_bp.route('/', methods=['GET', 'POST'])
+@cache.cached(timeout=60)
 def getAllPosts():
     """
     return all posts at the home page of forum

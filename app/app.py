@@ -11,10 +11,23 @@ from flask_login import LoginManager
 from models import User
 from azure.cosmos import CosmosClient
 from forum.forum import forum_bp
+from cache import cache
 import requests
+
+# cash config
+config = {
+    "CACHE_TYPE": "RedisCache",
+    "CACHE_DEFAULT_TIMEOUT": 300,
+    "CACHE_REDIS_HOST": "rediscachecs5154.redis.cache.windows.net",
+    "CACHE_REDIS_PORT": 6379,
+    "CACHE_REDIS_PASSWORD": "zphFdYBLdUjozosUg92hfRBQuMCccYLB2AzCaDQ32Oo="
+}
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.config.from_mapping(config)
+cache.init_app(app)
+
 app.register_blueprint(login_bp)
 app.register_blueprint(home_bp, url_prefix="/")
 app.register_blueprint(forum_bp, url_prefix="/forum")
@@ -53,6 +66,11 @@ def load_user(username):
     if not user_email:
         return None
     return User(email=user_email[0])
+
+# @app.route("/test")
+# @cache.cached(timeout=30)
+# def index():
+#     return 'test'
 
 if __name__ == "__main__":
     app.run(debug=True)

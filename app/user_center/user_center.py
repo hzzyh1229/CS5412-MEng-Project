@@ -3,6 +3,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from azure.cosmos import CosmosClient
 from datetime import datetime
 import requests
+from cache import cache
 API_BASE = "https://cs5412cloudjobboard.azurewebsites.net/"
 
 user_center_bp = Blueprint('user_center_bp', __name__, template_folder='templates')
@@ -16,6 +17,7 @@ CONTAINER_NAME = 'Applications'
 container = database.get_container_client(CONTAINER_NAME)
 
 @user_center_bp.route('/user_center', methods=['GET', 'POST'])
+# @cache.cached(timeout=30)
 def user_center():
   if current_user.is_authenticated:
     # print(current_user.get_username())
@@ -25,6 +27,7 @@ def user_center():
 
 @user_center_bp.route('/user_center/profile', methods=['GET', 'POST'])
 @login_required
+@cache.cached(timeout=60)
 def profile():
   username = current_user.get_username()['email']
   # print(username)
