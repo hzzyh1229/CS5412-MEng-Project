@@ -82,6 +82,8 @@ def home():
                 session["data"] = requests.get(API_BASE + f"/jobs/company={company}").json()
         #print("cur_page is : ",session["page"]+1)
         elif "recommend" in request.form.keys():
+            if not current_user.is_authenticated:
+                return redirect(url_for('login_bp.login'))
             flash('Here are the recommended jobs for you!')
             user_email = current_user.get_username()['email']
             session["data"] = requests.get(API_BASE + f"/jobs/recommend/{user_email}").json()
