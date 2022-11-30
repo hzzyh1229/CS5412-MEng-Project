@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from azure.cosmos import CosmosClient
-from datetime import datetime
+from datetime import datetime, date
 import requests
 API_BASE = "https://cs5412cloudjobboard.azurewebsites.net/"
 
@@ -84,7 +84,41 @@ def applications():
 @user_center_bp.route('/user_center/analysis', methods=['GET', 'POST'])
 @login_required
 def analysis():
-  return render_template("analysis.html")
+  application_info = list(container.query_items(
+        query='SELECT * FROM Applications WHERE Applications.email = @email',
+            parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
+            enable_cross_partition_query=True))
+  total_num = len(application_info)
+  total_OA_VO = 0
+  days_OA_VO = 0
+  total_offer = 0
+  days_offer = 0
+  total_reject = 0
+  days_reject = 0
+  for item in application_info:
+    apply_date_list = item["apply_date"].split("/")
+    d0 = date(int(apply_date_list[0]), int(apply_date_list[1]), int(apply_date_list[2]))
+    if (item["oa_vo_date"] != "N/A"):
+      total_OA_VO += 1
+      oa_vo_date_list = item["oa_vo_date"].split("/")
+      d1 = date(int(oa_vo_date_list[0]), int(oa_vo_date_list[1]), int(oa_vo_date_list[2]))
+      days_OA_VO += (d1 - d0).days
+    if (item["offer_date"] != "N/A"):
+      total_offer += 1
+      offer_date_list = item["offer_date"].split("/")
+      d2 = date(int(offer_date_list[0]), int(offer_date_list[1]), int(offer_date_list[2]))
+      days_offer += (d2 - d0).days
+    if (item["reject_date"] != "N/A"):
+      total_reject += 1
+      reject_date_list = item["reject_date"].split("/")
+      d3 = date(int(reject_date_list[0]), int(reject_date_list[1]), int(reject_date_list[2]))
+      days_reject += (d3 - d0).days
+  analysis_info = {
+    "OA_VO_rate": total_OA_VO / total_num, "OA_VO_speed": str(days_OA_VO / total_OA_VO) + " days", 
+    "offer_rate": total_offer / total_num, "offer_speed": str(days_offer / total_offer) + " days", 
+    "reject_rate": total_reject / total_num, "reject_speed": str(days_reject / total_reject) + " days"
+  }
+  return render_template("analysis.html", analysis = analysis_info)
 
 @user_center_bp.route('/logout')
 @login_required

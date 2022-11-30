@@ -1,21 +1,21 @@
 {% extends "user_center.html" %}
 {% block right %}
 <div class="row mt-5">
-  <span>Average OA/VO rate: </span>
+  <span>Average OA/VO rate: {{analysis['OA_VO_rate']}}</span>
 </div>
 <div class="row mt-5">
-  <span>Average days between application and OA/VO date: </span>
+  <span>Average days between application and OA/VO date: {{analysis['OA_VO_speed']}}</span>
 </div>
 <div class="row mt-5">
-  <span>Average offer rate: </span>
+  <span>Average offer rate: {{analysis['offer_rate']}}</span>
 </div>
 <div class="row mt-5">
-  <span>Average days between VO and offer date: </span>
+  <span>Average days between application and offer date: {{analysis['offer_speed']}}</span>
 </div>
 <div class="row mt-5">
-  <span>Average rejection rate: </span>
+  <span>Average rejection rate: {{analysis['reject_rate']}}</span>
 </div>
 <div class="row mt-5">
-  <span>Average ghost rate: </span>
+  <span>Average days between application and reject date: {{analysis['reject_speed']}}</span>
 </div>
 {% endblock %}
