@@ -54,8 +54,8 @@ def applications():
       cur_date = datetime.today().strftime('%Y/%m/%d')
       # delete repetitive data entries and get old info
       for item in container.query_items(
-        query='SELECT * FROM Applications WHERE Applications.job_id = @id',
-        parameters=[dict(name="@id", value=job_id)],
+        query='SELECT * FROM Applications WHERE Applications.job_id = @id AND Applications.email = @email',
+        parameters=[dict(name="@id", value=job_id), dict(name='@email', value=current_user.get_username()['email'])],
         enable_cross_partition_query=True):
       # for item in requests.get(API_BASE + f"/applications/{job_id}/null/any"):
           apply_date = item["apply_date"] if "apply_date" in item else "N/A"
@@ -69,7 +69,7 @@ def applications():
       "reject_date": cur_date if update_type == 2 else reject_date})
   # get application_info after update
   application_info = list(container.query_items(
-        query='SELECT * FROM Applications WHERE Applications.email = @email', 
+        query='SELECT * FROM Applications WHERE Applications.email = @email',
             parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
             enable_cross_partition_query=True))
   # application_info = requests.get(API_BASE + f"applications/null/{current_user.get_username()['email']}/any")
