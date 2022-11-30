@@ -53,11 +53,11 @@ def applications():
       new_status = info_lst[1]
       cur_date = datetime.today().strftime('%Y/%m/%d')
       # delete repetitive data entries and get old info
-      # for item in container.query_items(
-      #   query='SELECT * FROM Applications WHERE Applications.job_id = @id',
-      #   parameters=[dict(name="@id", value=job_id)],
-      #   enable_cross_partition_query=True):
-      for item in requests.get(API_BASE + f"/applications/{job_id}/null/any"):
+      for item in container.query_items(
+        query='SELECT * FROM Applications WHERE Applications.job_id = @id',
+        parameters=[dict(name="@id", value=job_id)],
+        enable_cross_partition_query=True):
+      # for item in requests.get(API_BASE + f"/applications/{job_id}/null/any"):
           apply_date = item["apply_date"] if "apply_date" in item else "N/A"
           oa_vo_date = item["oa_vo_date"] if "oa_vo_date" in item else "N/A"
           offer_date = item["offer_date"] if "offer_date" in item else "N/A"
