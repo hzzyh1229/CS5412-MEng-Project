@@ -4,9 +4,9 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Job</th>
+      <th scope="col">title</th>
       <th scope="col">Current status</th>
-      <th scope="col" style="width: 50%">Timeline</th>
+      <th scope="col" style="width: 40%">Timeline</th>
       <th scope="col">Update status</th>
     </tr>
   </thead>
@@ -14,7 +14,7 @@
     {% for application in applications %}
     <tr>
       <th scope="row">{{loop.index}}</th>
-      <td>{{application['job_id']}}</td>
+      <td>{{application['title_company']}}</td>
       <td>{{application['status']}}</td>
       <!-- <td>
         <p>
@@ -43,6 +43,10 @@
         <form action="#" method="post">
           <button type="submit" name="update-rejected" value="{{application['job_id']}}+rejected"
             class="btn-primary">got rejected</button>
+        </form>
+        <form action="#" method="post">
+          <button type="submit" name="delete" value="{{application['job_id']}}+delete"
+            class="btn-primary">delete</button>
         </form>
       </td>
     </tr>

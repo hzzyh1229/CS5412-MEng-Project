@@ -1,24 +1,23 @@
 {% extends "home_base.html" %}
 {% block title%} Homepage {% endblock %}
-{% block body %}     
+{% block body %}
 
 {% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div class="container">
-      {% for message in messages %}
-        <div class="alert alert-success alert-dismissible" role="aler">
-          {{message}}
-          <button class="btn-close" aria-label="close"
-          data-bs-dismiss="alert"></button>
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
+{% if messages %}
+<div class="container">
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissible" role="aler">
+    {{message}}
+    <button class="btn-close" aria-label="close" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
 {% endwith %}
 
 <script>
-  if ( window.history.replaceState ) {
-      window.history.replaceState( null, null, window.location.href );
+  if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
   }
 </script>
 
@@ -26,61 +25,62 @@
   <div class="row">
     <div class="col">
       <form class="form-inline" action="#" method="post">
-        <input type="text" name = "company" placeholder="Company">
-        <label  for="customCheck1">visa-sponsorship</label>
-        <input type="checkbox" name = "visa" id="customCheck1">
-        <button type="submit" name = "filter" value = "filter" class="btn btn-outline-primary">Search</button>
-      </form>   
+        <input type="text" name="company" placeholder="Company">
+        <label for="customCheck1">visa-sponsorship</label>
+        <input type="checkbox" name="visa" id="customCheck1">
+        <button type="submit" name="filter" value="filter" class="btn btn-outline-primary">Search</button>
+      </form>
     </div>
-    <div class = "col">
+    <div class="col">
       <form class="form-inline" action="#" method="post">
-        <button type="submit" name = "recommend" value = "recommend" class="btn btn-outline-primary">Recommend Jobs</button>
+        <button type="submit" name="recommend" value="recommend" class="btn btn-outline-primary">Recommend Jobs</button>
       </form>
     </div>
   </div>
 </div>
 
-<div class = "container">
+<div class="container">
   <script>
     document.location.hash = '#top';
   </script>
 </div>
 
 
-<div class = "container">
-    <p>Having {{info["n_results"]}} results</p>
-    <p>Page {{info["page"]}}, showing {{info["page"]*5-5+1}} to {{info["page"]*5-5+5}} in this page:</p>
-    {% for job in info["jobs"] %}
-    <div class = "row justify-content-center align-self-center">
-      <div class="card mb-3">
-        <div class="card-body d-flex flex-md-column flex-wrap">
-          <h5 class="card-title">Title: {{job["position"]}}</h5>
-          <p class="card-text">Company: {{job["company"]}}</p>
-          <p class="card-text">{{job["type"]}}</p>
-          <p class="card-text"><small class="text-muted">Post Time: {{job["date"]}}</small></p>
-          <p class = "col g-2">
-            <a href = '/job{{job["job_id"]}}'>Read More / Add to Applied </a>
-          </p>
-          <form action="#" method="post">
-            <button type="submit" name = "apply" value = '{{job["job_id"]}}' class="btn btn-outline-primary">Apply</button>
-          </form>
-          {% if error and error_job_id == job["job_id"]%}
-            <!-- <span style="color: red;">[{{ error }}]</span> -->
-            <div class="alert alert-danger alert-dismissible" role="alert">
-              {{error}}
-              <button class="btn-close" aria-label="close" data-bs-dismiss="alert"></button>
-            </div>
-          {% endif %}
+<div class="container">
+  <p>Having {{info["n_results"]}} results</p>
+  <p>Page {{info["page"]}}, showing {{info["page"]*5-5+1}} to {{info["page"]*5-5+5}} in this page:</p>
+  {% for job in info["jobs"] %}
+  <div class="row justify-content-center align-self-center">
+    <div class="card mb-3">
+      <div class="card-body d-flex flex-md-column flex-wrap">
+        <h5 class="card-title">Title: {{job["position"]}}</h5>
+        <p class="card-text">Company: {{job["company"]}}</p>
+        <p class="card-text">{{job["type"]}}</p>
+        <p class="card-text"><small class="text-muted">Post Time: {{job["date"]}}</small></p>
+        <p class="col g-2">
+          <a href='/job{{job["job_id"]}}'>Read More / Add to Applied </a>
+        </p>
+        <form action="#" method="post">
+          <button type="submit" name="apply" value='{{job["job_id"]}}+{{job["position"]}}+{{job["company"]}}'
+            class="btn btn-outline-primary">Apply</button>
+        </form>
+        {% if error and error_job_id == job["job_id"]%}
+        <!-- <span style="color: red;">[{{ error }}]</span> -->
+        <div class="alert alert-danger alert-dismissible" role="alert">
+          {{error}}
+          <button class="btn-close" aria-label="close" data-bs-dismiss="alert"></button>
         </div>
+        {% endif %}
       </div>
     </div>
-    {% endfor%}
+  </div>
+  {% endfor%}
 </div>
-<div class = "container">
+<div class="container">
   <p>Now at Page {{info["page"]}}</p>
   <form action="#" method="post">
-    <button type="submit" name = "changePage" value = "next" class="btn btn-outline-primary">Next Page</button>
-    <button type="submit" name = "changePage" value = "last" class="btn btn-outline-secondary">Last Page</button>
+    <button type="submit" name="changePage" value="next" class="btn btn-outline-primary">Next Page</button>
+    <button type="submit" name="changePage" value="last" class="btn btn-outline-secondary">Last Page</button>
   </form>
-</div> 
+</div>
 {% endblock %}
