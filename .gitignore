@@ -5,3 +5,6 @@ app/home/__pycache__/
 app/user_center/__pycache__/
 app/forum/__pycache__/
 scrape/.ipynb_checkpoints/
+
+.python_packages
+venv

@@ -68,11 +68,11 @@ def applications():
       "offer_date": cur_date if update_type == 1 else offer_date, 
       "reject_date": cur_date if update_type == 2 else reject_date})
   # get application_info after update
-  # application_info = list(container.query_items(
-  #       query='SELECT * FROM Applications WHERE Applications.email = @email', 
-  #           parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
-  #           enable_cross_partition_query=True))
-  application_info = requests.get(API_BASE + f"applications/null/{current_user.get_username()['email']}/any")
+  application_info = list(container.query_items(
+        query='SELECT * FROM Applications WHERE Applications.email = @email', 
+            parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
+            enable_cross_partition_query=True))
+  # application_info = requests.get(API_BASE + f"applications/null/{current_user.get_username()['email']}/any")
   return render_template("applications.html", applications = application_info)
 
 @user_center_bp.route('/user_center/analysis', methods=['GET', 'POST'])

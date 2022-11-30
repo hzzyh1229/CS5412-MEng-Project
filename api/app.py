@@ -57,7 +57,7 @@ class CompanyJob(Resource):
 class AllJob(Resource):
     def get(self):
         data = list(job_container.query_items(
-        query='SELECT * FROM c',
+        query='SELECT * FROM c OFFSET 0 LIMIT 50',
         enable_cross_partition_query=True))
         return data
 
@@ -72,7 +72,7 @@ class RecommendJob(Resource):
 
         # email = "test1@gmail.com"
         all_jobs = list(job_container.query_items(
-        query='SELECT * FROM c',
+        query='SELECT * FROM c OFFSET 0 LIMIT 100',
         enable_cross_partition_query=True))
 
         past_applications = list(application_container.query_items(
