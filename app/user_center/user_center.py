@@ -86,6 +86,7 @@ def applications():
 
 @user_center_bp.route('/user_center/analysis', methods=['GET', 'POST'])
 @login_required
+@cache.cached(timeout=30)
 def analysis():
   application_info = list(container.query_items(
         query='SELECT * FROM Applications WHERE Applications.email = @email',
