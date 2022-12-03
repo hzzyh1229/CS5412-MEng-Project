@@ -6,6 +6,7 @@ from datetime import datetime
 import requests
 from flask import Flask, redirect, url_for, render_template, Blueprint, session, request, flash
 from cache import cache
+from datetime import datetime, date
 home_bp = Blueprint("home", __name__, static_folder="static",  static_url_path='/static/home', template_folder="templates")
 
 URL = "https://playground2.documents.azure.com:443/"
@@ -105,4 +106,50 @@ def home():
 def position(job_id):
     #job_info = list(container.query_items(query=f'SELECT * FROM c WHERE c.job_id = "{job_id}"', enable_cross_partition_query=True))[0]
     job_info = requests.get(API_BASE + f"jobs/{job_id}").json()[0]
-    return render_template("job_description.html", job_info = job_info)
+    application_info = list(application_container.query_items(
+        query='SELECT * FROM Applications WHERE Applications.job_id = @id',
+        parameters=[dict(name="@id", value=job_id)],
+        enable_cross_partition_query=True))
+    total_num = len(application_info)
+    if (total_num == 0):
+        analysis_info = {
+            "num_application": "0",
+            "OA_VO_rate": "0%", "OA_VO_speed": "0 days", 
+            "offer_rate": "0%", "offer_speed": "0 days", 
+            "reject_rate": "0%", "reject_speed": "0 days"
+        }
+    else:
+        total_OA_VO = 0
+        days_OA_VO = 0
+        total_offer = 0
+        days_offer = 0
+        total_reject = 0
+        days_reject = 0
+        for item in application_info:
+            apply_date_list = item["apply_date"].split("/")
+            d0 = date(int(apply_date_list[0]), int(apply_date_list[1]), int(apply_date_list[2]))
+            if (item["oa_vo_date"] != "N/A"):
+                total_OA_VO += 1
+                oa_vo_date_list = item["oa_vo_date"].split("/")
+                d1 = date(int(oa_vo_date_list[0]), int(oa_vo_date_list[1]), int(oa_vo_date_list[2]))
+                days_OA_VO += (d1 - d0).days
+            if (item["offer_date"] != "N/A"):
+                total_offer += 1
+                offer_date_list = item["offer_date"].split("/")
+                d2 = date(int(offer_date_list[0]), int(offer_date_list[1]), int(offer_date_list[2]))
+                days_offer += (d2 - d0).days
+            if (item["reject_date"] != "N/A"):
+                total_reject += 1
+                reject_date_list = item["reject_date"].split("/")
+                d3 = date(int(reject_date_list[0]), int(reject_date_list[1]), int(reject_date_list[2]))
+                days_reject += (d3 - d0).days
+        analysis_info = {
+            "num_application": total_num,
+            "OA_VO_rate": str(round(total_OA_VO / total_num, 2) * 100) + "%", 
+            "OA_VO_speed": str(round(days_OA_VO / total_OA_VO, 2) if total_OA_VO != 0 else 0) + " days", 
+            "offer_rate": str(round(total_offer / total_num, 2) * 100) + "%", 
+            "offer_speed": str(round(days_offer / total_offer, 2) if total_offer != 0 else 0) + " days", 
+            "reject_rate": str(round(total_reject / total_num, 2) * 100) + "%", 
+            "reject_speed": str(round(days_reject / total_reject, 2) if total_reject != 0 else 0) + " days"
+        }
+    return render_template("job_description.html", job_info = job_info, analysis = analysis_info)

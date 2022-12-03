@@ -93,35 +93,45 @@ def analysis():
             parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
             enable_cross_partition_query=True))
   total_num = len(application_info)
-  total_OA_VO = 0
-  days_OA_VO = 0
-  total_offer = 0
-  days_offer = 0
-  total_reject = 0
-  days_reject = 0
-  for item in application_info:
-    apply_date_list = item["apply_date"].split("/")
-    d0 = date(int(apply_date_list[0]), int(apply_date_list[1]), int(apply_date_list[2]))
-    if (item["oa_vo_date"] != "N/A"):
-      total_OA_VO += 1
-      oa_vo_date_list = item["oa_vo_date"].split("/")
-      d1 = date(int(oa_vo_date_list[0]), int(oa_vo_date_list[1]), int(oa_vo_date_list[2]))
-      days_OA_VO += (d1 - d0).days
-    if (item["offer_date"] != "N/A"):
-      total_offer += 1
-      offer_date_list = item["offer_date"].split("/")
-      d2 = date(int(offer_date_list[0]), int(offer_date_list[1]), int(offer_date_list[2]))
-      days_offer += (d2 - d0).days
-    if (item["reject_date"] != "N/A"):
-      total_reject += 1
-      reject_date_list = item["reject_date"].split("/")
-      d3 = date(int(reject_date_list[0]), int(reject_date_list[1]), int(reject_date_list[2]))
-      days_reject += (d3 - d0).days
-  analysis_info = {
-    "OA_VO_rate": total_OA_VO / total_num, "OA_VO_speed": str(days_OA_VO / total_OA_VO) + " days", 
-    "offer_rate": total_offer / total_num, "offer_speed": str(days_offer / total_offer) + " days", 
-    "reject_rate": total_reject / total_num, "reject_speed": str(days_reject / total_reject) + " days"
-  }
+  if (total_num == 0):
+    analysis_info = {
+      "OA_VO_rate": "0%", "OA_VO_speed": "0 days", 
+      "offer_rate": "0%", "offer_speed": "0 days", 
+      "reject_rate": "0%", "reject_speed": "0 days"
+    }
+  else:
+    total_OA_VO = 0
+    days_OA_VO = 0
+    total_offer = 0
+    days_offer = 0
+    total_reject = 0
+    days_reject = 0
+    for item in application_info:
+      apply_date_list = item["apply_date"].split("/")
+      d0 = date(int(apply_date_list[0]), int(apply_date_list[1]), int(apply_date_list[2]))
+      if (item["oa_vo_date"] != "N/A"):
+        total_OA_VO += 1
+        oa_vo_date_list = item["oa_vo_date"].split("/")
+        d1 = date(int(oa_vo_date_list[0]), int(oa_vo_date_list[1]), int(oa_vo_date_list[2]))
+        days_OA_VO += (d1 - d0).days
+      if (item["offer_date"] != "N/A"):
+        total_offer += 1
+        offer_date_list = item["offer_date"].split("/")
+        d2 = date(int(offer_date_list[0]), int(offer_date_list[1]), int(offer_date_list[2]))
+        days_offer += (d2 - d0).days
+      if (item["reject_date"] != "N/A"):
+        total_reject += 1
+        reject_date_list = item["reject_date"].split("/")
+        d3 = date(int(reject_date_list[0]), int(reject_date_list[1]), int(reject_date_list[2]))
+        days_reject += (d3 - d0).days
+    analysis_info = {
+      "OA_VO_rate": str(round(total_OA_VO / total_num, 2) * 100) + "%", 
+      "OA_VO_speed": str(round(days_OA_VO / total_OA_VO, 2) if total_OA_VO != 0 else 0) + " days", 
+      "offer_rate": str(round(total_offer / total_num, 2) * 100) + "%", 
+      "offer_speed": str(round(days_offer / total_offer, 2) if total_offer != 0 else 0) + " days", 
+      "reject_rate": str(round(total_reject / total_num, 2) * 100) + "%", 
+      "reject_speed": str(round(days_reject / total_reject, 2) if total_reject != 0 else 0) + " days"
+    }
   return render_template("analysis.html", analysis = analysis_info)
 
 @user_center_bp.route('/logout')

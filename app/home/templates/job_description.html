@@ -1,18 +1,27 @@
 {% extends "home_base.html" %}
 {% block title%} Homepage {% endblock %}
-{% block body %}     
-<div class = "container">
-    <div class = "row">
-        <div class = "col">
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col">
 
         </div>
-        <div class = "col-8">
+        <div class="col-8">
             <h1>Position: {{job_info["position"]}}</h1>
             <h1>Company: {{job_info["company"]}}</h1>
-            <p>Description: {{job_info["description"]}}</p>
+            <h1>Description</h1>
+            <p>{{job_info["description"]}}</p>
+            <h1>Analysis</h1>
+            <span>Total number of users applied for this job: {{analysis['num_application']}}</span><br>
+            <span>Average OA/VO rate: {{analysis['OA_VO_rate']}}</span><br>
+            <span>Average days between application and OA/VO date: {{analysis['OA_VO_speed']}}</span><br>
+            <span>Average offer rate: {{analysis['offer_rate']}}</span><br>
+            <span>Average days between application and offer date: {{analysis['offer_speed']}}</span><br>
+            <span>Average rejection rate: {{analysis['reject_rate']}}</span><br>
+            <span>Average days between application and reject date: {{analysis['reject_speed']}}</span><br>
         </div>
-        <div class = "col">
-            
+        <div class="col">
+
         </div>
     </div>
 
