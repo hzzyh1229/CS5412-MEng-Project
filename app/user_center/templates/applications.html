@@ -14,7 +14,7 @@
     {% for application in applications %}
     <tr>
       <th scope="row">{{loop.index}}</th>
-      <td>{{application['title_company']}}</td>
+      <td>{{application['title']}}@{{application['company']}}</td>
       <td>{{application['status']}}</td>
       <!-- <td>
         <p>

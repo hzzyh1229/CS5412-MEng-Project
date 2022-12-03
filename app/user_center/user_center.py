@@ -64,14 +64,15 @@ def applications():
         parameters=[dict(name="@id", value=job_id), dict(name='@email', value=current_user.get_username()['email'])],
         enable_cross_partition_query=True):
       # for item in requests.get(API_BASE + f"/applications/{job_id}/null/any"):
-          title_company = item["title_company"] if "title_company" in item else "N/A"
+          job_title = item["job_title"] if "job_title" in item else "N/A"
+          job_company = item["job_company"] if "job_company" in item else "N/A"
           apply_date = item["apply_date"] if "apply_date" in item else "N/A"
           oa_vo_date = item["oa_vo_date"] if "oa_vo_date" in item else "N/A"
           offer_date = item["offer_date"] if "offer_date" in item else "N/A"
           reject_date = item["reject_date"] if "reject_date" in item else "N/A"
           container.delete_item(item, partition_key=current_user.get_username()['email'])
       if (update_type != 3):
-        container.upsert_item({"email":current_user.get_username()['email'], "job_id": job_id, "title_company": title_company,
+        container.upsert_item({"email":current_user.get_username()['email'], "job_id": job_id, "title": job_title, "company": job_company,
         "status": new_status, "apply_date": apply_date, "oa_vo_date": cur_date if update_type == 0 else oa_vo_date, 
         "offer_date": cur_date if update_type == 1 else offer_date,
         "reject_date": cur_date if update_type == 2 else reject_date})
@@ -81,6 +82,7 @@ def applications():
             parameters=[dict(name="@email", value=current_user.get_username()['email'])], 
             enable_cross_partition_query=True))
   application_info = sorted(application_info, key=lambda d: d['job_id'])
+  print(application_info)
   # application_info = requests.get(API_BASE + f"applications/null/{current_user.get_username()['email']}/any")
   return render_template("applications.html", applications = application_info)
 
