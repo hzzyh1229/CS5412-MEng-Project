@@ -58,7 +58,6 @@ def home():
                     job_id = job_info[0]
                     job_title = job_info[1]
                     job_company = job_info[2]
-                    title_company = job_title + ' @ ' + job_company
                     user_email = current_user.get_username()['email']
                     cur_date = datetime.today().strftime('%Y/%m/%d')
                     application_info = list(application_container.query_items(
@@ -67,7 +66,7 @@ def home():
                         enable_cross_partition_query=True))
                     # application_info = requests.get(API_BASE + f"/applications/{job_id}/{user_email}/any").json()
                     if (len(application_info) == 0):
-                        application_container.upsert_item({"email":user_email, "job_id": job_id, "title_company": title_company,
+                        application_container.upsert_item({"email":user_email, "job_id": job_id, "title": job_title, "company": job_company,
                         "status": "submitted", "apply_date": cur_date, "oa_vo_date": "N/A",
                         "offer_date": "N/A", "reject_date": "N/A"})
 
