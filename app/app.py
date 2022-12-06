@@ -20,15 +20,21 @@ config = {
     "CACHE_DEFAULT_TIMEOUT": 300,
     "CACHE_REDIS_HOST": "rediscachecs5154.redis.cache.windows.net",
     "CACHE_REDIS_PORT": 6379,
-    "CACHE_REDIS_PASSWORD": "zphFdYBLdUjozosUg92hfRBQuMCccYLB2AzCaDQ32Oo="
+    "CACHE_REDIS_PASSWORD": "zphFdYBLdUjozosUg92hfRBQuMCccYLB2AzCaDQ32Oo=",
 }
 
 app = Flask(__name__)
 app.config.from_object(Config)
 app.config.from_mapping(config)
+# app.config['EMAIL_HOST'] = 'smtp.googlemail.com'
+# app.config['EMAIL_PORT'] = 465
+# app.config['EMAIL_HOST_USER'] = 'cs5154jobboard@gmail.com'
+# app.config['EMAIL_HOST_PASSWORD'] = '5154@test'
+# app.config['EMAIL_USE_SSL'] = True
 cache.init_app(app)
 
 app.register_blueprint(login_bp)
+# app.register_blueprint(notification_bp, url_prefix="/notification")
 app.register_blueprint(home_bp, url_prefix="/")
 app.register_blueprint(forum_bp, url_prefix="/forum")
 login_manager = LoginManager(app)
@@ -67,10 +73,6 @@ def load_user(username):
         return None
     return User(email=user_email[0])
 
-# @app.route("/test")
-# @cache.cached(timeout=30)
-# def index():
-#     return 'test'
 
 if __name__ == "__main__":
     app.run(debug=True)
