@@ -18,7 +18,6 @@ COMMENTS_CONTAINER_NAME = 'Comments'
 comment_container = database.get_container_client(COMMENTS_CONTAINER_NAME)
 
 @forum_bp.route('/', methods=['GET', 'POST'])
-@cache.cached(timeout=60)
 def getAllPosts():
     """
     return all posts at the home page of forum
