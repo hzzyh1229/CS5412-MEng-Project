@@ -64,8 +64,8 @@ def applications():
         parameters=[dict(name="@id", value=job_id), dict(name='@email', value=current_user.get_username()['email'])],
         enable_cross_partition_query=True):
       # for item in requests.get(API_BASE + f"/applications/{job_id}/null/any"):
-          job_title = item["job_title"] if "job_title" in item else "N/A"
-          job_company = item["job_company"] if "job_company" in item else "N/A"
+          job_title = item["title"] if "title" in item else "N/A"
+          job_company = item["company"] if "company" in item else "N/A"
           apply_date = item["apply_date"] if "apply_date" in item else "N/A"
           oa_vo_date = item["oa_vo_date"] if "oa_vo_date" in item else "N/A"
           offer_date = item["offer_date"] if "offer_date" in item else "N/A"
