@@ -3,7 +3,7 @@ _Cloud-based user interactive SDE Job Application Platform_
 
 ## Web Server:
 
-  Unavailable Yet:P
+  https://cs5412cloudjobboardapp.azurewebsites.net/#
 
 ## Project Objective:
 
